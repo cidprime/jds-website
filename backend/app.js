@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+const userRoutes = require('./routes/user');
+
 const app = express();
 
 // Middleware pour parser les requêtes JSON
@@ -20,10 +22,8 @@ app.use((req, res, next) => {
   next();
 })
 
-// Routes simples pour tester le serveur
-app.get('/', (req, res) => {
-    res.send('API de e-learning');
-});
+// Les Routes
 
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
