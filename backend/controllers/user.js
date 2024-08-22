@@ -3,17 +3,30 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 // Inscription d'un nouvel utilisateur
+/**
+ * Handles user signup by validating email and password fields, checking for existing users,
+ * hashing the password, and saving the new user to the database.
+ * 
+ * @param {Object} req - The request object containing user data in the body
+ * @param {Object} res - The response object to send back the result
+ * @param {Function} next - The next middleware function
+ * @returns {Object} JSON response indicating success or failure of user creation
+ */
 exports.signup = async (req, res, next) => {
   const { name, email, password } = req.body;
 
-  // On hash le mot de passe donne par l'utilisateur
+   // Validate email and password fields
+  if (!validateEmail(email) || !validatePassword(password)) {
+    return res.status(400).json({ message: 'Invalid email or password format' });
+  }
+
   try {
-    const userExist = User.findOne({ email });
+    const userExist = await User.findOne({ email });
 
-    if(userExist) {
-      res.status(400).json({ message: 'Unable to create an account with this email' });
-
+    if (userExist) {
+      return res.status(400).json({ message: 'Unable to create an account with this email' });
     }
+
     const hash = await bcrypt.hash(password, 10);
 
     const user = new User({
@@ -23,17 +36,44 @@ exports.signup = async (req, res, next) => {
     });
 
     await user.save();
-    res.status(201).json({message: 'New user create'})
+    return res.status(201).json({ message: 'New user created' });
 
-  } catch(error) {
-    res.status(500).json({error});
-
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 }
 
+// Email validation function
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Password validation function
+function validatePassword(password) {
+  // Example criteria: at least 8 characters, at least one number, one special character
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return passwordRegex.test(password);
+}
+
 // Connextion d'un ancien utilisateur
+/**
+ * Asynchronous function to handle user login.
+ * Validates the input email and password.
+ * Checks if the user exists and verifies the password.
+ * Generates a JWT token with user details and expiration time.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Object} JSON response with user ID and JWT token.
+ */
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
+
+  // Input validation for email and password
+  if(!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
   
   try {
     const user = await User.findOne({ email });
@@ -50,17 +90,19 @@ exports.login = async (req, res, next) => {
       res.status(401).json({ message: 'Incorrect username/password pair' });
 
     }
+
+    // Ensure 'iat' claim in JWT token
     res.status(200).json({
       userId: user._id,
       token: jwt.sign(
-        { userId: user._id, role: user.role },
-        'RANDOM_SECRET_TOKEN',
-        { expiresIn: '10h' }
+        { userId: user._id, role: user.role, iat: Math.floor(Date.now() / 1000) },
+        process.env.JWT_SECRET,
+        { expiresIn: '6h' }
       )
     })
 
   } catch(error) {
-    res.status(500).json({error});
-
+    console.error(`Error during login: ${error}`);
+    res.status(500).json({ message: 'An error occurred during login' });
   }
 }

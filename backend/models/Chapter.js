@@ -3,9 +3,9 @@ const {Schema} = mongoose;
 
 const ChapterSchema = new Schema({
     title: { type: String, required: true },
-    content: { type: String, required: true },  // Texte du chapitre
     videoUrl: { type: String },  // Lien vers la vidéo
-    courseId: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
+    content: { type: String, required: true },  // Texte du chapitre
+    fileUrl: [String],  // Lien vers des fichiers telechargeables
     quiz: { type: Schema.Types.ObjectId, ref: 'Quiz' }
 });
 

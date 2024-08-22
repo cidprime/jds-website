@@ -2,17 +2,19 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const courseSchema = new Schema({
-    title: { type: String, required: true },
+    title: { type: String, required: true, index: true }, // Adding index to optimize search
     description: { type: String, required: true },
-    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    chapters: [{ type: Schema.Types.ObjectId, ref: 'Chapter' }],
-    imageUrl: {type: String, required: true},
-    isFree: { type: Boolean, default: true }, // Indique si le cours est gratuit
-    price: { type: Number, default: 0 }, // Prix du cours si payant
-    category: { type: String, required: true },
-    duration: Number,
-    tags: [String],
-    materials: [String]  // Références aux fichiers téléchargeables
+    imageUrl: { type: String, required: true },
+    content: [{ type: Schema.Types.ObjectId, ref: 'Chapter', required: true }],
+    createdBy: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
+    price: { type: Number, default: 0 },    // Prix du cours si payant
+    level: { type: String, required: true }, // Niveau de difficulte du cours
+    duration: { type: Number, required: true },     // Temps estimer pour finir le cours
+    tags: [{ type: String, required: true }], // Updated to store multiple tags
+    rating: { type: Number, default: 0 },
+    syllabus: [String],        // Programme du cours
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Course', courseSchema);

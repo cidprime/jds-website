@@ -3,15 +3,17 @@ const router = express.Router();
 
 const courseCtrl = require('../controllers/course');
 const auth = require('../middleware/auth');
+const multer = require('../middleware/multer-config');
 
 
-router.post('/', auth, courseCtrl.createCourse);
-router.put('/:id', auth, courseCtrl.modifyCourse);
+router.post('/', auth, multer, courseCtrl.createCourse);
+router.put('/:id', auth, multer, courseCtrl.modifyCourse);
 router.delete('/:id', auth, courseCtrl.deleteCourse);
 
 router.get('/', courseCtrl.getAllCourses);
-router.get('/:id/info', courseCtrl.getOneCourseInfo);
-router.get('/:id/content', courseCtrl.getOneCourseContent);
+router.get('/theme/:theme', courseCtrl.getCoursesByTheme);
+router.get('/:id/info', courseCtrl.getCourseInfo);
+router.get('/:id/content', auth, courseCtrl.getCourseContent);
 
 
 module.exports = router;
