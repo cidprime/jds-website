@@ -1,5 +1,6 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const path = require('path');
+const connectDB = require('./config/db');
 
 const userRoutes = require('./routes/user');
 const courseRoutes = require('./routes/course');
@@ -10,9 +11,7 @@ const app = express();
 app.use(express.json());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb+srv://sidiki:rpl36lBhisyqRsSg@cluster0.oihvz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch((error) => console.log(`${error}`));
+connectDB();
 
 // Autorise les requetes venant d'autres port.
 app.use((req, res, next) => {
@@ -27,6 +26,6 @@ app.use((req, res, next) => {
 
 app.use('/api/auth', userRoutes);
 app.use('/api/courses', courseRoutes);
-app.use('/images', express.static(__dirname, 'public/images'));
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 module.exports = app;

@@ -1,6 +1,6 @@
 const { body, validationResult } = require('express-validator');
 
-const validateCourse = [
+module.exports = [
   body('course').isString().withMessage('Course must be a string'),
   body('course').custom(value => {
     const courseObject = JSON.parse(value);
