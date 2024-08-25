@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const courseCtrl = require('../controllers/course');
-const auth  = require('../middleware/auth');
-const authorizeAdmin = require('../middleware/authorizeAdmin');
-const validateCourse = require('../middleware/validateCourse');
-const multer = require('../middleware/multer-config');
+const auth  = require('../middlewares/auth');
+const authorizeAdmin = require('../middlewares/role');
+const validateCourse = require('../middlewares/validateCourse');
+const multer = require('../middlewares/multer-config');
 
 router.post('/',auth, authorizeAdmin, validateCourse, multer, courseCtrl.createCourse);
 router.put('/:id',auth, authorizeAdmin, validateCourse, multer, courseCtrl.modifyCourse);
