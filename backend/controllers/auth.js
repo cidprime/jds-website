@@ -106,3 +106,31 @@ exports.login = async (req, res, next) => {
     res.status(500).json({ message: 'An error occurred during login' });
   }
 }
+
+
+exports.logout = async (req, res, next) => {
+    try {
+      console.log(`User ${req.user.username} logged out at ${new Date()}`);
+      // Invalidate the token (implementation depends on your token management strategy)
+
+      res.status(200).json({ message: `Logout successful` });
+
+    } catch (error) {
+      next(error);
+    }
+}
+
+exports.me = async (req, res, next) => {
+
+  if (!req || !req.body || !req.user) {
+    return res.status(400).json({ message: 'Invalid request data' });
+  }
+
+  try {
+    const user = await User.findById(req.user.id);
+    res.json(user);
+    
+  } catch (err) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}

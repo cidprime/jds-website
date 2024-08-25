@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const connectDB = require('./config/db');
 
-const userRoutes = require('./routes/user');
+const authRoutes = require('./routes/auth');
 const courseRoutes = require('./routes/course');
 
 const app = express();
@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 
 // Les Routes
 
-app.use('/api/auth', userRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
