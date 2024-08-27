@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const tokenBlacklist = require('../models/tokenBlacklist');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -107,19 +108,36 @@ exports.login = async (req, res, next) => {
   }
 }
 
-
+/**
+ * Logout the user and invalidate the token by adding it to the blacklist.
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Object} - JSON response indicating the success or failure of the logout operation.
+ */
 exports.logout = async (req, res, next) => {
     try {
       console.log(`User ${req.user.username} logged out at ${new Date()}`);
-      // Invalidate the token (implementation depends on your token management strategy)
+      // Invalidate the token by adding it to the blacklist
+      const token = req.header('x-auth-token');
+      await tokenBlacklist.create({ token });
 
       res.status(200).json({ message: `Logout successful` });
 
     } catch (error) {
-      next(error);
+      res.status(500).json({error});
     }
 }
 
+/**
+ * Middleware function to retrieve the user's own profile information.
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Object} JSON object with the user's profile information or an error message.
+ */
 exports.me = async (req, res, next) => {
 
   if (!req || !req.body || !req.user) {
@@ -131,6 +149,6 @@ exports.me = async (req, res, next) => {
     res.json(user);
     
   } catch (err) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ err: 'Internal Server Error' });
   }
 }
