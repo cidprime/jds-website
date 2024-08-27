@@ -17,8 +17,8 @@ exports.signup = async (req, res, next) => {
   const { name, email, password } = req.body;
 
    // Validate email and password fields
-  if (!validateEmail(email) || !validatePassword(password)) {
-    return res.status(400).json({ message: 'Invalid email or password format' });
+  if (!validateEmail(email) || !validatePassword(password) || !name) {
+    return res.status(400).json({ message: 'Invalid name, email or password format' });
   }
 
   try {
