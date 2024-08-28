@@ -1,4 +1,5 @@
 const { body, validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 
 module.exports = [
   body('course').isString().withMessage('Course must be a string'),
