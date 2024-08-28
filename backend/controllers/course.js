@@ -121,10 +121,10 @@ exports.createCourse = async (req, res, next) => {
  */
 exports.modifyCourse = async (req, res, next) => {    
     try {
-        const courseObject = req.file && {
+        const courseObject = req.file ? {
             ...JSON.parse(req.body.course),
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        } || { ...req.body };
+        } : { ...req.body };
 
         // Input validation for course data
         if (!isValidCourseData(courseObject)) {
@@ -137,9 +137,8 @@ exports.modifyCourse = async (req, res, next) => {
             return res.status(401).json({ message: 'not authorized' }); 
 
         } else {
-          const updated = await Course.findByIdAndUpdate(req.params.id, { ...courseObject });
+          const updated = await Course.findByIdAndUpdate(req.params.id, { ...courseObject }, { new: true, runValidators: true });
           if(updated) return res.status(200).json({ message: 'modified course' });
-
         }
 
     } catch (error) {

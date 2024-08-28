@@ -89,24 +89,21 @@ exports.createUser = async (req, res, next) => {
 exports.modifyUser = async (req, res, next) => {
   const { name, email, password, role } = req.body;
 
-  if (!validateEmail(email) || !validatePassword(password) || !name || !role) {
+  if (!validateEmail(email) || !validatePassword(password) || !name || !role || !['student', 'admin', 'professor'].includes(role)) {
     return res.status(400).json({ message: 'Invalid format data' });
-  }
-  if (!['student', 'admin', 'professor'].includes(role)) {
-    return res.status(400).json({ message: 'This role does not exist' });
   }
 
   try {
     const user = await User.findById(req.params.id);
-    if(!user) return res.status(404).json({ message: 'User not found' });
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
     const hash = await bcrypt.hash(password, 10);
-    await User.findByIdAndUpdate(req.params.id, {
-      name, 
-      email, 
-      password: hash, 
-      role
-    });
+    const updatedUser = { name, email, password: hash, role };
+    const options = { new: true, runValidators: true };
+
+    const updatedUserData = await User.findByIdAndUpdate(req.params.id, updatedUser, options);
+    if(!updatedUserData) return res.status(404).json({ message: 'User not found' });
+
     return res.json({ message: 'User modified successfully' });
     
   } catch(err) {

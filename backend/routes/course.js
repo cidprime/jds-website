@@ -4,7 +4,7 @@ const router = express.Router();
 const courseCtrl = require('../controllers/course');
 const auth  = require('../middlewares/auth');
 const authorizeAdmin = require('../middlewares/role');
-const validateCourse = require('../middlewares/validateCourse');
+const validateCourse = require('../utils/courseValidator');
 const multer = require('../middlewares/multer-config');
 
 router.post('/',auth, authorizeAdmin, validateCourse, multer, courseCtrl.createCourse);
