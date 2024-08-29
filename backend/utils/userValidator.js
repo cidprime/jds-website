@@ -1,14 +1,23 @@
-const { body, checkSchema } = require('express-validator');
+const { checkSchema } = require('express-validator');
 const mongoose = require('mongoose');
 
 exports.userSchemaValidation = checkSchema({
-  name: {
+  firstname: {
     notEmpty: {
-      errorMessage: "Name is required"
+      errorMessage: "firstname is required"
     },
     isLength: {
       options: { min: 3, max: 32 },
-      errorMessage: "Name must be at least 3 characters with a max of 32 characters"
+      errorMessage: "firstname must be at least 3 characters with a max of 32 characters"
+    }
+  },
+  lastname: {
+    notEmpty: {
+      errorMessage: "lastname is required"
+    },
+    isLength: {
+      options: { min: 3, max: 32 },
+      errorMessage: "lastname must be at least 3 characters with a max of 32 characters"
     }
   },
   email: {

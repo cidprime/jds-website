@@ -1,3 +1,4 @@
+const auth = require('./auth');
 /**
  * Middleware function to check if the request is authorized as an admin.
  * If not authorized, returns a 403 status with a message.

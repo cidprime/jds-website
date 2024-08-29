@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const { validateEmail, validatePassword } = require('../utils/validationUtils');
+const { matchedData } = require('express-validator');
 
 /**
  * Retrieves all users from the database and sends a JSON response with the users.
@@ -55,27 +55,18 @@ exports.getOneUser = async (req, res, next) => {
  * @returns {Object} JSON response indicating success or failure of user creation.
  */
 exports.createUser = async (req, res, next) => {
-  const { name, email, password, role } = req.body;
-
-  if (!validateEmail(email) || !validatePassword(password) || !name || !role) {
-    return res.status(400).json({ message: 'Invalid format data' });
-  }
-  if (!['student', 'admin', 'professor'].includes(role)) {
-    return res.status(400).json({ message: 'This role does not exist' });
-  }
+  const data = matchedData(req);
 
   try {
-    const userExist = await User.findOne({ email });
+    const userExist = await User.findOne({ email: data.email });
     if (userExist) {
       return res.status(400).json({ message: 'Unable to create an account with this email' });
     }
 
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(data.password, 10);
     const user = new User({
-      name,
-      email,
-      password: hash,
-      role
+      ...data,
+      password: hash
     });
 
     await user.save();
@@ -87,18 +78,14 @@ exports.createUser = async (req, res, next) => {
 }
 
 exports.modifyUser = async (req, res, next) => {
-  const { name, email, password, role } = req.body;
-
-  if (!validateEmail(email) || !validatePassword(password) || !name || !role || !['student', 'admin', 'professor'].includes(role)) {
-    return res.status(400).json({ message: 'Invalid format data' });
-  }
+  const data = matchedData(req);
 
   try {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const hash = await bcrypt.hash(password, 10);
-    const updatedUser = { name, email, password: hash, role };
+    const hash = await bcrypt.hash(data.password, 10);
+    const updatedUser = { ...data, password: hash };
     const options = { new: true, runValidators: true };
 
     const updatedUserData = await User.findByIdAndUpdate(req.params.id, updatedUser, options);
@@ -113,7 +100,16 @@ exports.modifyUser = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
   try {
-    
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+    if(!user) {
+      return res.status(401).json({ message: 'unauthorized' });
+    }
+
+    await User.findByIdAndDelete(userId);
+    res.json({ message: 'user deleted successfully' })
+
   } catch(err) {
     res.status(500).json({ error: err.message });
   }
