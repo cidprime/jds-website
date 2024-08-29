@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const tokenBlacklist = require('../models/tokenBlacklist');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const generateToken = require('../utils/tokenUtils');
 
 // Inscription d'un nouvel utilisateur
 /**
@@ -15,11 +15,6 @@ const jwt = require('jsonwebtoken');
  */
 exports.signup = async (req, res, next) => {
   const { name, email, password } = req.body;
-
-   // Validate email and password fields
-  if (!validateEmail(email) || !validatePassword(password) || !name) {
-    return res.status(400).json({ message: 'Invalid name, email or password format' });
-  }
 
   try {
     const userExist = await User.findOne({ email });
@@ -36,25 +31,18 @@ exports.signup = async (req, res, next) => {
       password: hash
     });
 
-    await user.save();
-    return res.status(201).json({ message: 'New user created' });
+    const savedUser = await user.save();
+
+    const token = generateToken(savedUser._id, savedUser.role);
+    return res.status(201).json({ 
+      userId: savedUser._id,
+      token,
+      message: 'New user created'
+    });
 
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-}
-
-// Email validation function
-function validateEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-// Password validation function
-function validatePassword(password) {
-  // Example criteria: at least 8 characters, at least one number, one special character
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  return passwordRegex.test(password);
 }
 
 // Connextion d'un ancien utilisateur
@@ -89,22 +77,17 @@ exports.login = async (req, res, next) => {
 
     if(!valid) {
       res.status(401).json({ message: 'Incorrect username/password pair' });
-
     }
 
+    const token = generateToken(user._id, user.role);
     // Ensure 'iat' claim in JWT token
     res.status(200).json({
       userId: user._id,
-      token: jwt.sign(
-        { userId: user._id, role: user.role, iat: Math.floor(Date.now() / 1000) },
-        process.env.JWT_SECRET,
-        { expiresIn: '6h' }
-      )
-    })
+      token
+    });
 
   } catch(error) {
-    console.error(`Error during login: ${error}`);
-    res.status(500).json({ message: 'An error occurred during login' });
+    res.status(500).json({ error: error.message });
   }
 }
 
