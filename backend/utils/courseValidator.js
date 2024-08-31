@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, checkSchema } = require('express-validator');
 const mongoose = require('mongoose');
 
 module.exports = [
@@ -66,3 +66,42 @@ module.exports = [
   }
 ];
 
+
+exports.courseSchemaValidation = checkSchema({
+  title: {
+    isString: {
+      errorMessage: "Title must be a string"
+    },
+    notEmpty: {
+      errorMessage: "Title is required"
+    }
+  },
+  description: {
+    isString: {
+      errorMessage: "Description must be a string"
+    },
+    notEmpty: {
+      errorMessage: "Description is required"
+    }
+  },
+  imageUrl: {
+    isString: {
+      errorMessage: "Image url must be a string"
+    },
+    notEmpty: {
+      errorMessage: "Image url is required"
+    }
+  },
+  sections: {
+    isArray: {
+      errorMessage: ""
+    },
+    notEmpty: {
+      errorMessage: "Section is required"
+    },
+    custom: {
+      // add custom to make sure the array contains object id
+    }
+    // also add a sanitization
+  }
+});

@@ -14,7 +14,7 @@ const generateToken = require('../utils/tokenUtils');
  * @returns {Object} JSON response indicating success or failure of user creation
  */
 exports.signup = async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { firstname, lastname, email, password } = req.body;
 
   try {
     const userExist = await User.findOne({ email });
@@ -26,7 +26,8 @@ exports.signup = async (req, res, next) => {
     const hash = await bcrypt.hash(password, 10);
 
     const user = new User({
-      name,
+      firstname,
+      lastname,
       email,
       password: hash
     });
@@ -101,7 +102,6 @@ exports.login = async (req, res, next) => {
  */
 exports.logout = async (req, res, next) => {
     try {
-      console.log(`User ${req.user.username} logged out at ${new Date()}`);
       // Invalidate the token by adding it to the blacklist
       const token = req.header('x-auth-token');
       await tokenBlacklist.create({ token });
@@ -109,7 +109,7 @@ exports.logout = async (req, res, next) => {
       res.status(200).json({ message: `Logout successful` });
 
     } catch (error) {
-      res.status(500).json({error});
+      res.status(500).json({ error: error.message }); 
     }
 }
 
@@ -123,15 +123,15 @@ exports.logout = async (req, res, next) => {
  */
 exports.me = async (req, res, next) => {
 
-  if (!req || !req.body || !req.user) {
+  if (!req || !req.body || !req.auth) {
     return res.status(400).json({ message: 'Invalid request data' });
   }
 
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.auth.userId);
     res.json(user);
     
   } catch (err) {
-    res.status(500).json({ err: 'Internal Server Error' });
+    res.status(500).json({ error: err.message });
   }
 }

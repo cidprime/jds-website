@@ -13,7 +13,7 @@ require('dotenv').config;
  */
 module.exports = async (req, res, next) => {
   const token = req.header('x-auth-token');
-  if(!token) return res.status(401).json({ message: 'Access denied'});
+  if(!token) return res.status(401).json({ message: 'No token provided'});
 
   try {
     // Ckech if the token is blacklisted
