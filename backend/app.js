@@ -6,6 +6,7 @@ const userRoutes = require('./routes/user');
 const authRoutes = require('./routes/auth');
 const courseRoutes = require('./routes/course');
 const sectionRoutes = require('./routes/section');
+const chapterRoutes = require('./routes/chapter');
 
 const app = express();
 
@@ -25,11 +26,12 @@ app.use((req, res, next) => {
 })
 
 // Les Routes
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/sections', sectionRoutes);
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
+app.use('/api/chapters', chapterRoutes);
 
 module.exports = app;

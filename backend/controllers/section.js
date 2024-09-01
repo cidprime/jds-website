@@ -45,7 +45,7 @@ exports.modifySection = async (req, res, next) => {
     const section = await Section.findById(sectionId);
     if(!section) return res.status(404).json({ message: 'Section not found' });
 
-    await Section.findByIdAndUpdate(sectionId, { ... req.body }, { new: true, runValidators: true });
+    await Section.findByIdAndUpdate(sectionId, { ...req.body }, { new: true, runValidators: true });
     return res.json({ message: 'modified section' });
 
   } catch(err) {
@@ -61,7 +61,7 @@ exports.deleteSection = async (req, res, next) => {
 
     await Section.findByIdAndDelete(sectionId);
     return res.json({ message: 'Section deleted successfully' });
-    
+
   } catch(err) {
     res.status(500).json({ error: err.message });
   }
