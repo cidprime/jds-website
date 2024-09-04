@@ -13,57 +13,6 @@ module.exports = [
     return true;
      
   }),
-  body('title')
-    .isString().withMessage('Title must be a string')
-    .notEmpty().withMessage('Title is required'),
-  body('description')
-    .isString().withMessage('Description must be a string')
-    .notEmpty().withMessage('Description is required'),
-  body('imageUrl')
-    .isString().withMessage('Image URL must be a string')
-    .notEmpty().withMessage('Image URL is required'),
-  body('sections')
-    .isArray().withMessage('Sections must be an array')
-    .notEmpty().withMessage('Sections are required')
-    .custom((value) => value.every(id => mongoose.Types.ObjectId.isValid(id))).withMessage('Each section must be a valid ObjectId'),
-  body('createdBy')
-    .isArray().withMessage('CreatedBy must be an array')
-    .notEmpty().withMessage('CreatedBy is required')
-    .custom((value) => value.every(id => mongoose.Types.ObjectId.isValid(id))).withMessage('Each createdBy must be a valid ObjectId'),
-  body('price')
-    .isNumeric().withMessage('Price must be a number')
-    .optional(),
-  body('level')
-    .isString().withMessage('Level must be a string')
-    .notEmpty().withMessage('Level is required'),
-  body('duration')
-    .isNumeric().withMessage('Duration must be a number')
-    .notEmpty().withMessage('Duration is required'),
-  body('tags')
-    .isArray().withMessage('Tags must be an array')
-    .notEmpty().withMessage('Tags are required')
-    .custom((value) => value.every(tag => typeof tag === 'string')).withMessage('Each tag must be a string'),
-  body('rating')
-    .isNumeric().withMessage('Rating must be a number')
-    .optional(),
-  body('syllabus')
-    .isArray().withMessage('Syllabus must be an array')
-    .optional()
-    .custom((value) => value.every(item => typeof item === 'string')).withMessage('Each syllabus item must be a string'),
-  body('createdAt')
-    .isISO8601().withMessage('CreatedAt must be a valid date')
-    .optional(),
-  body('updatedAt')
-    .isISO8601().withMessage('UpdatedAt must be a valid date')
-    .optional(),
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-      
-    }
-    next();
-  }
 ];
 
 
@@ -94,14 +43,91 @@ exports.courseSchemaValidation = checkSchema({
   },
   sections: {
     isArray: {
-      errorMessage: ""
+      errorMessage: "Sections must be an array"
     },
     notEmpty: {
       errorMessage: "Section is required"
     },
     custom: {
       // add custom to make sure the array contains object id
+      options: (value) => value.every(id => mongoose.Types.ObjectId.isValid(id)),
+      errorMessage: "Each section must be a valid ObjectId"
+    } // also add a sanitization
+  },
+  createdBy: {
+    isArray: {
+      errorMessage: "CreatedBy must be an array"
+    },
+    notEmpty: {
+      errorMessage: "CreatedBy is required"
+    },
+    custom: {
+      options: (value) => value.every(id => mongoose.Types.ObjectId.isValid(id)),
+      errorMessage: "Each CreatedBy must be a valid ObjectId"
     }
-    // also add a sanitization
-  }
+  },
+  price: {
+    optional: true,
+    isNumeric: {
+      errorMessage: "Price must be a number"
+    }
+  },
+  level: {
+    isString: {
+      errorMessage: "Level must be a string"
+    },
+    notEmpty: {
+      errorMessage: "Level is required"
+    }
+  },
+  duration: {
+    isNumeric: {
+      errorMessage: "Duration must be a number"
+    },
+    notEmpty: {
+      errorMessage: "Duration is required"
+    }
+  },
+  tags: {
+    isArray: {
+      errorMessage: "Tags must be an array"
+    },
+    notEmpty: {
+      errorMessage: "Tags are required"
+    },
+    custom: {
+      options: (value) => value.every(tag => typeof tag === 'string'),
+      errorMessage: "Each tag must be a string"
+    }
+  },
+  rating: {
+    optional: true,
+    isNumeric: {
+      errorMessage: "Rating must be a number"
+    }
+  },
+  syllabus: {
+    isArray: {
+      errorMessage: "Syllabus must be an array"
+    },
+    notEmpty: {
+      errorMessage: "Syllabus is required"
+    },
+    custom: {
+      options: (value) => value.every(item => typeof item === 'string'),
+      errorMessage: "Each syllabus item must be a string"
+    }
+  },
+  createdAt: {
+    optional: true,
+    isISO8601: {
+      errorMessage: "CreatedAt must be a valid date"
+    }
+  },
+  updatedAt: {
+    optional: true,
+    isISO8601: {
+      errorMessage: "CreatedAt must be a valid date"
+    }
+  },
 });
