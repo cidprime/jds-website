@@ -12,9 +12,7 @@ const courseSchema = new Schema({
     duration: { type: Number, required: true },     // Temps estimer pour finir le cours
     tags: [{ type: String, required: true }], // Updated to store multiple tags
     rating: { type: Number, default: 0 },
-    syllabus: [{ type: String, required: true }],      // Programme du cours
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
-});
+    syllabus: [{ type: String, required: true }]     // Programme du cours
+}, { timestamps: true });
 
 module.exports = mongoose.model('Course', courseSchema);

@@ -8,6 +8,6 @@ const QuizSchema = new Schema({
     options: [{ type: String, required: true }],
     correctAnswer: [{ type: String, required: true }]
   }]
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Quiz', QuizSchema);

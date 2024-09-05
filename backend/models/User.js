@@ -12,7 +12,7 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ['student', 'admin'], default: 'student' },
   Enrollments: [{ type: Schema.Types.ObjectId, ref: 'Enrollment' }]
-})
+}, { timestamps: true })
 
 userSchema.plugin(uniqueValidator);
 

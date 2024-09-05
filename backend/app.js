@@ -40,4 +40,16 @@ app.use('/api/quiz', quizRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/progress', progressRoutes);
 
+/*
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+  return res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message
+  });
+});
+*/
+
 module.exports = app;

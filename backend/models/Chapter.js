@@ -6,6 +6,6 @@ const ChapterSchema = new Schema({
     videoUrl: [{ type: String }],  // Lien vers la vidéo
     content: { type: String, required: true },  // Texte du chapitre
     fileUrl: [{ type: String }],  // Lien vers des fichiers telechargeables
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Chapter', ChapterSchema);

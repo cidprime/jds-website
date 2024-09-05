@@ -9,6 +9,6 @@ const EnrollmentSchema = new Schema({
     status: { type: String, enum: ['Active', 'Completed', 'Dropped'], default: 'Active' },
     progressId: { type: Schema.Types.ObjectId, ref: 'Progress' }
   }],
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Enrollment', EnrollmentSchema);

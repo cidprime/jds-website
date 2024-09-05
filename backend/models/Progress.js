@@ -10,6 +10,6 @@ const ProgressSchema = new Schema({
     score: { type: Number }
   }],
   progressCourse: { type: Number, default: 0 } // En pourcentage
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Progress', ProgressSchema);
