@@ -8,9 +8,10 @@ const courseSchema = new Schema({
     sections: [{ type: Schema.Types.ObjectId, ref: 'Section', required: true }],
     createdBy: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
     price: { type: Number, default: 0 },    // Prix du cours si payant
+    isFree: { type: Boolean },
     level: { type: String, required: true }, // Niveau de difficulte du cours
     duration: { type: Number, required: true },     // Temps estimer pour finir le cours
-    tags: [{ type: String, required: true }], // Updated to store multiple tags
+    theme: [{ type: String, required: true, index: true}], // Updated to store multiple tags
     rating: { type: Number, default: 0 },
     syllabus: [{ type: String, required: true }]     // Programme du cours
 }, { timestamps: true });

@@ -1,4 +1,5 @@
-const auth = require('./auth');
+const errorHandler = require('../utils/errorHandler');
+const auth = require('./verifyToken');
 /**
  * Middleware function to check if the request is authorized as an admin.
  * If not authorized, returns a 403 status with a message.
@@ -7,8 +8,8 @@ const auth = require('./auth');
  * @param {Function} next - The next middleware function.
  */
 module.exports = (req, res, next) => {
-  if (!req.auth && req.auth.role !== 'admin') {
-    return res.status(403).json({ message: `Unauthorized to create, modify or delete a course` });
+  if (!req.auth && req.auth.role !== 'admin' || req.auth.role !== 'professor') {
+    return next(errorHandler(403, 'Forbidden'));
   }
   next();
 };

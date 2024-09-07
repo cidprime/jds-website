@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const quizCtrl = require('../controllers/quiz');
-const auth = require('../middlewares/auth');
+const verifyToken = require('../middlewares/verifyToken');
 const isAdmin = require('../middlewares/isAdmin');
 
 /*

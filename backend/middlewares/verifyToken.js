@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const tokenBlacklist = require('../models/tokenBlacklist');
+const errorHandler = require('../utils/errorHandler');
 require('dotenv').config;
 
 /**
@@ -12,23 +12,20 @@ require('dotenv').config;
  * @param {Function} next - The next middleware function
  */
 module.exports = async (req, res, next) => {
-  const token = req.header('x-auth-token');
-  if(!token) return res.status(401).json({ message: 'No token provided'});
+  const token = req.cookies.access_token;
+  if(!token) return next(errorHandler(401, 'Unauthorized'));
 
   try {
-    // Ckech if the token is blacklisted
-    const blacklistedToken = await tokenBlacklist.findOne({ token });
-    if (blacklistedToken) return res.status(401).json({ message: 'Token is invalid' });
-
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    const { userId, role, iat } = decodedToken;
+    if(!decodedToken) return next(errorHandler(403, 'Forbidden'));
+    const { userId, role } = decodedToken;
     req.auth = {
       userId,
       role
     };
     next();
 
-  } catch (error) {
-    res.status(400).json({error});
+  } catch (err) {
+    res.status(400).json({ error: err.message} );
   }
 }

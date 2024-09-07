@@ -1,30 +1,25 @@
 const User = require('../models/User');
-const tokenBlacklist = require('../models/tokenBlacklist');
 const bcrypt = require('bcrypt');
 const generateToken = require('../utils/tokenUtils');
+const errorHandler = require('../utils/errorHandler');
 
 // Inscription d'un nouvel utilisateur
 /**
- * Handles user signup by validating email and password fields, checking for existing users,
- * hashing the password, and saving the new user to the database.
+ * Handles user signup process.
  * 
- * @param {Object} req - The request object containing user data in the body
- * @param {Object} res - The response object to send back the result
- * @param {Function} next - The next middleware function
- * @returns {Object} JSON response indicating success or failure of user creation
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Promise} A promise that resolves with a JSON response indicating the success or failure of user creation.
  */
 exports.signup = async (req, res, next) => {
   const { firstname, lastname, email, password } = req.body;
 
   try {
     const userExist = await User.findOne({ email });
-
-    if (userExist) {
-      return res.status(400).json({ message: 'Unable to create an account with this email' });
-    }
+    if (userExist) next(errorHandler(400, 'Unable to create an account with this email'));
 
     const hash = await bcrypt.hash(password, 10);
-
     const user = new User({
       firstname,
       lastname,
@@ -32,14 +27,8 @@ exports.signup = async (req, res, next) => {
       password: hash
     });
 
-    const savedUser = await user.save();
-
-    const token = generateToken(savedUser._id, savedUser.role);
-    return res.status(201).json({ 
-      userId: savedUser._id,
-      token,
-      message: 'New user created'
-    });
+    await user.save();
+    return res.status(201).json("User created successfully");
 
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -48,44 +37,34 @@ exports.signup = async (req, res, next) => {
 
 // Connextion d'un ancien utilisateur
 /**
- * Asynchronous function to handle user login.
- * Validates the input email and password.
- * Checks if the user exists and verifies the password.
- * Generates a JWT token with user details and expiration time.
+ * Handles the login functionality.
+ * Retrieves user credentials from the request body, validates them,
+ * generates a token if credentials are correct, and returns user details without the password.
+ * Sets an access token cookie for the client and sends the user details in the response.
+ * If any errors occur during the process, sends an appropriate error response.
+ *
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
- * @returns {Object} JSON response with user ID and JWT token.
+ * @returns {Object} - JSON response containing user details or an error message.
  */
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
-
-  // Input validation for email and password
-  if(!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
-  }
   
   try {
     const user = await User.findOne({ email });
 
-    if(!user) {
-      res.status(401).json({ message: 'Incorrect username/password pair'});
-
-    }
-    // on compare le hash du pwd envoyer par le user et celui dans la DB
+    if(!user) return next(errorHandler(404, 'Wrong credentials!'));
 
     const valid = await bcrypt.compare(password, user.password);
 
-    if(!valid) {
-      res.status(401).json({ message: 'Incorrect username/password pair' });
-    }
+    if(!valid) return next(errorHandler(401, 'Wrong credentials!'));
 
     const token = generateToken(user._id, user.role);
-    // Ensure 'iat' claim in JWT token
-    res.status(200).json({
-      userId: user._id,
-      token
-    });
+
+    const { password: pass, ...rest } = user._doc; // return result without password
+    
+    res.cookie('access_token', token, { httpOnly: true }).status(200).json(rest);
 
   } catch(error) {
     res.status(500).json({ error: error.message });
@@ -101,16 +80,13 @@ exports.login = async (req, res, next) => {
  * @returns {Object} - JSON response indicating the success or failure of the logout operation.
  */
 exports.logout = async (req, res, next) => {
-    try {
-      // Invalidate the token by adding it to the blacklist
-      const token = req.header('x-auth-token');
-      await tokenBlacklist.create({ token });
+  try {
+    res.clearCookie('access_token');
+    res.status(200).json({ message: `Logout successful` });
 
-      res.status(200).json({ message: `Logout successful` });
-
-    } catch (error) {
-      res.status(500).json({ error: error.message }); 
-    }
+  } catch (error) {
+    res.status(500).json({ error: error.message }); 
+  }
 }
 
 /**
@@ -122,16 +98,17 @@ exports.logout = async (req, res, next) => {
  * @returns {Object} JSON object with the user's profile information or an error message.
  */
 exports.me = async (req, res, next) => {
-
-  if (!req || !req.body || !req.auth) {
-    return res.status(400).json({ message: 'Invalid request data' });
-  }
-
-  try {
-    const user = await User.findById(req.auth.userId);
-    res.json(user);
+  if(req.auth.userId === req.params.id) {
     
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    try {
+      const user = await User.findById(req.auth.userId).select('-password');
+      res.json({ user });
+      
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+
+  } else {
+    return next(errorHandler(401, 'Unauthorized'));
   }
 }

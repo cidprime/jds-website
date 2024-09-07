@@ -1,4 +1,5 @@
 const Course = require('../models/Course');
+const errorHandler = require('../utils/errorHandler');
 const fs = require('fs').promises;
 
 /**
@@ -10,34 +11,26 @@ const fs = require('fs').promises;
  * @returns {Promise<void>} - A promise that resolves once the operation is complete.
  */
 exports.getAllCourses = async (req, res, next) => {
-  try {
-    const courses = await Course.find();
-    res.status(200).json(courses);
+  const { theme } = req.query;
 
-  } catch(error) {
-    res.status(400).json({error});
+  try {
+    let courses;
+
+    if(theme) {
+      courses = await Course.find({ theme }).select('-sections');
+  
+    } else {
+      courses = await Course.find().select('-sections');
+    }
+
+    return res.json(courses);
+
+  } catch(err) {
+    res.status(400).json({ error: err.message });
   }
 
 };
 
-/**
- * Retrieves courses based on a specific theme.
- * 
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- * @returns {Promise<void>} A promise that resolves with the courses found based on the theme.
- */
-exports.getCoursesByTheme = async (req, res, next) => {
-  try {
-    const { theme } = req.params;
-    const courses = await Course.find({ theme });
-    res.json(courses);
-
-  } catch (error) {
-    res.status(404).json({error});
-  }
-}
 
 /**
  * Retrieves a specific course content based on the provided course ID.
@@ -49,13 +42,13 @@ exports.getCoursesByTheme = async (req, res, next) => {
  */
 exports.getCourseContent = async (req, res, next) => {
   try{
-    const course = await Course.findById(req.params.id);
+    const course = await Course.findById(req.params.id).select('title sections createdBy level duration syllabus');
     if (!course) return res.status(404).send('Course content not found.');
 
     res.status(200).json(course);
 
-  } catch(error) {
-    res.status(404).json({error});
+  } catch(err) {
+    res.status(404).json({ error: err.message});
   }
 };
 
@@ -69,13 +62,13 @@ exports.getCourseContent = async (req, res, next) => {
  */
 exports.getCourseInfo = async (req, res, next) => {
   try{
-    const course = await Course.findById(req.params.id).select('title description imageUrl price level duration rating createdBy syllabus');
-    if (!course) return res.status(404).send('Course not found.');
+    const course = await Course.findById(req.params.id).select('-sections');
+    if (!course) return next(errorHandler(404, 'Course not found'));
     
-    res.status(200).json(course);
+    res.json(course);
 
-  } catch(error) {
-    res.status(404).json({error});
+  } catch(err) {
+    res.status(404).json({ error: err.message });
   }
 };
 
@@ -92,22 +85,21 @@ exports.getCourseInfo = async (req, res, next) => {
  */
 exports.createCourse = async (req, res, next) => { 
   try {
-    const courseObject = JSON.parse(req.body.course);
+    const newCourse = await Course.create(req.body);
+    res.status(201).json(newCourse);
 
+/*
+    const courseObject = JSON.parse(req.body);
     delete courseObject._id;
-
     if (req.file) {
       const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
       const newCourse = new Course({ ...courseObject, imageUrl });
-
-      const saved = await newCourse.save();
-      if (saved) {
-        return res.json({ message: 'Course created successfully' });
-      }
+      await newCourse.save();
+      return res.json({ message: 'Course created successfully' });
     }
-
-  } catch (error) {
-    res.status(500).json({ error });
+*/
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -119,42 +111,26 @@ exports.createCourse = async (req, res, next) => {
  * @param {Function} next - The next middleware function.
  * @returns {Object} JSON response indicating success or failure of course modification.
  */
-exports.modifyCourse = async (req, res, next) => {    
+exports.modifyCourse = async (req, res, next) => {
+  if(req.auth.role !== 'student') {
+
     try {
-        const courseObject = req.file ? {
-            ...JSON.parse(req.body.course),
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        } : { ...req.body };
+      const course = await Course.findById(req.params.id);
+      if(!course) return next(errorHandler(404, 'Course not found'));
 
-        // Input validation for course data
-        if (!isValidCourseData(courseObject)) {
-          return res.status(400).json({ message: 'Invalid course data' });
-        }
-
-        const course = await Course.findById(req.params.id);
-        
-        if(!course) {
-            return res.status(401).json({ message: 'not authorized' }); 
-
-        } else {
-          const updated = await Course.findByIdAndUpdate(req.params.id, { ...courseObject }, { new: true, runValidators: true });
-          if(updated) return res.status(200).json({ message: 'modified course' });
-        }
-
-    } catch (error) {
-        console.error(`Error modifying course: ${error}`);
-        return res.status(500).json({ error: 'Internal server error' });
+      const courseUpdated = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      return res.status(200).json(courseUpdated);
+  
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
     }
+
+  } else {
+    return next(errorHandler(401, 'Unauthorized'));
+  }
+  
 };
 
-// Function to validate course data 
-// This is example before create all fields in fontend
-function isValidCourseData(data) {
-  if (data && typeof data === 'object' && data.hasOwnProperty('title') && typeof data.title === 'string' && data.hasOwnProperty('description') && typeof data.description === 'String' && data.hasOwnProperty('imageUrl') && typeof data.imageUrl === 'String') {
-    return true;
-  }
-  return false;
-}
 
 /**
  * Deletes a course based on the provided course ID.
@@ -165,24 +141,24 @@ function isValidCourseData(data) {
  * @returns {Object} JSON response indicating the result of the deletion operation.
  */
 exports.deleteCourse = async (req, res, next) => {
-  try {
-    const courseId = req.params.id;
+  if(req.auth.role !== 'student') {
+    try {
+      const courseId = req.params.id;
 
-    if (!mongoose.Types.ObjectId.isValid(courseId)) {
-      return res.status(400).json({ message: `Invalid courseId` });
+      const course = await Course.findById(courseId);
+      if (!course) return next(errorHandler(404, 'Course not found'));
+
+      // const filename = course.imageUrl.split('/images/')[1];
+      // await fs.unlink(`images/${filename}`);
+
+      await Course.findByIdAndDelete(courseId);
+
+      res.json("Course deleted successfully");
+
+    } catch (error) {
+      res.status(500).json({error});
     }
-
-    const course = await Course.findById(courseId);
-    if (!course) return res.status(404).json({ message: `Course not found` });
-
-    const filename = course.imageUrl.split('/images/')[1];
-
-    await fs.unlink(`images/${filename}`);
-    await Course.findByIdAndDelete(courseId);
-
-    res.status(200).json({ message: `Course deleted successfully` });
-
-  } catch (error) {
-    res.status(500).json({error});
+  } else {
+    return next(errorHandler(401, 'Unauthorized'));
   }
 };

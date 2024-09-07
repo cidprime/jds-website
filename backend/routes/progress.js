@@ -12,7 +12,7 @@ const progressCtrl = require('../controllers/progress');
 
 router.get('/', progressCtrl.getAllProgess);
 router.get('/:id', progressCtrl.getOneProgess);
-router.past('/', progressCtrl.createProgess);
+router.post('/', progressCtrl.createProgess);
 router.put('/:id', progressCtrl.modifyProgess);
 
 
