@@ -31,7 +31,7 @@ exports.signup = async (req, res, next) => {
     return res.status(201).json("User created successfully");
 
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    next(error);
   }
 }
 
@@ -67,7 +67,7 @@ exports.login = async (req, res, next) => {
     res.cookie('access_token', token, { httpOnly: true }).status(200).json(rest);
 
   } catch(error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 }
 
@@ -85,7 +85,7 @@ exports.logout = async (req, res, next) => {
     res.status(200).json({ message: `Logout successful` });
 
   } catch (error) {
-    res.status(500).json({ error: error.message }); 
+    next(error);
   }
 }
 
@@ -105,7 +105,7 @@ exports.me = async (req, res, next) => {
       res.json({ user });
       
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      next(err);
     }
 
   } else {
