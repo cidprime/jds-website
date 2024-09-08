@@ -13,7 +13,15 @@ const errorHandler = require('../utils/errorHandler');
  */
 exports.getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find().select('-password'); // Exclude password field from the query result
+    const users = await User.find()
+      .select('-password')
+      .populate({
+        path: 'enrollments',
+        populate: [
+          { path: 'courses.courseId', select: 'title description imageUrl' },
+          { path: 'courses.progressId', select: 'progressCourse' }
+        ]
+      });
     res.json({ users });
 
   } catch(err) {
@@ -33,7 +41,15 @@ exports.getOneUser = async (req, res, next) => {
   if(req.auth.userId !== req.params.id) return next(errorHandler(401, 'unauthorized'));
 
   try {
-    const user = await User.findById(req.params.id).select('-password'); // Exclude password field from the query result
+    const user = await User.findById(req.params.id)
+      .select('-password') // Exclude password field from the query result
+      .populate({
+        path: 'enrollments',
+        populate: [
+          { path: 'courses.courseId', select: 'title description imageUrl' },
+          { path: 'courses.progressId', select: 'progressCourse' }
+        ]
+      });
     if(!user) return next(errorHandler(404, 'User not found'));
 
     res.json({ user });
