@@ -7,7 +7,7 @@ const userCtrl = require('../controllers/user');
 const verifyToken = require('../middlewares/verifyToken');
 const isAdmin = require('../middlewares/isAdmin');
 
-router.get('/', userCtrl.getAllUsers);
+router.get('/', verifyToken, isAdmin, userCtrl.getAllUsers);
 router.get('/:id', verifyToken, userCtrl.getOneUser);
 
 router.put('/:id', verifyToken, userCtrl.modifyUser);

@@ -28,7 +28,7 @@ exports.signup = async (req, res, next) => {
     });
 
     await user.save();
-    return res.status(201).json("User created successfully");
+    return res.status(201).json("Successful registration");
 
   } catch (error) {
     next(error);
@@ -48,22 +48,18 @@ exports.signup = async (req, res, next) => {
  * @param {Function} next - The next middleware function.
  * @returns {Object} - JSON response containing user details or an error message.
  */
-exports.login = async (req, res, next) => {
+exports.signin = async (req, res, next) => {
   const { email, password } = req.body;
   
   try {
     const user = await User.findOne({ email });
-
     if(!user) return next(errorHandler(404, 'Wrong credentials!'));
 
     const valid = await bcrypt.compare(password, user.password);
-
     if(!valid) return next(errorHandler(401, 'Wrong credentials!'));
 
     const token = generateToken(user._id, user.role);
-
-    const { password: pass, ...rest } = user._doc; // return result without password
-    
+    const { password: pass, role: role, ...rest } = user._doc; // return result without password
     res.cookie('access_token', token, { httpOnly: true }).status(200).json(rest);
 
   } catch(error) {
@@ -79,10 +75,10 @@ exports.login = async (req, res, next) => {
  * @param {Function} next - The next middleware function.
  * @returns {Object} - JSON response indicating the success or failure of the logout operation.
  */
-exports.logout = async (req, res, next) => {
+exports.signout = async (req, res, next) => {
   try {
     res.clearCookie('access_token');
-    res.status(200).json({ message: `Logout successful` });
+    res.status(200).json({ message: `sign out successful` });
 
   } catch (error) {
     next(error);
@@ -101,7 +97,15 @@ exports.me = async (req, res, next) => {
   if(req.auth.userId === req.params.id) {
     
     try {
-      const user = await User.findById(req.auth.userId).select('-password');
+      const user = await User.findById(req.auth.userId)
+        .select('-password -role') // Exclude password field from the query result
+        .populate({
+          path: 'enrollments',
+          populate: [
+            { path: 'courses.courseId', select: 'title description imageUrl' },
+            { path: 'courses.progressId', select: 'progressCourse' }
+          ]
+        });
       res.json({ user });
       
     } catch (err) {

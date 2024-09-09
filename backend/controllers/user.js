@@ -42,7 +42,7 @@ exports.getOneUser = async (req, res, next) => {
 
   try {
     const user = await User.findById(req.params.id)
-      .select('-password') // Exclude password field from the query result
+      .select('-password -role') // Exclude password field from the query result
       .populate({
         path: 'enrollments',
         populate: [
@@ -77,7 +77,7 @@ exports.modifyUser = async (req, res, next) => {
       }
     } , { new: true });
 
-    const { password, ...rest } = updatedUser._doc;
+    const { password, role, ...rest } = updatedUser._doc;
 
     return res.json(rest);
     

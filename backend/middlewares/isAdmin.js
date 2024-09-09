@@ -8,7 +8,7 @@ const auth = require('./verifyToken');
  * @param {Function} next - The next middleware function.
  */
 module.exports = (req, res, next) => {
-  if (!req.auth && req.auth.role !== 'admin' || req.auth.role !== 'professor') {
+  if (!req.auth && req.auth.role !== 'admin') {
     return next(errorHandler(403, 'Forbidden'));
   }
   next();
