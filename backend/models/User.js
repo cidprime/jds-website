@@ -10,8 +10,8 @@ const userSchema = new Schema({
   lastname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ['student', 'admin'], default: 'student' },
-  enrollments: [{ type: Schema.Types.ObjectId, ref: 'Enrollment' }]
+  role: { type: String, enum: ['student', 'admin', 'editor', 'professor'], default: 'student' },
+  enrollments: [{ type: Schema.Types.ObjectId, ref: 'Enrollment' }] // ????
 }, { timestamps: true })
 
 userSchema.plugin(uniqueValidator);
