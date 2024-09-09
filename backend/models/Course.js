@@ -10,8 +10,9 @@ const courseSchema = new Schema({
     price: { type: Number, default: 0 },    // Prix du cours si payant
     isFree: { type: Boolean },
     level: { type: String, required: true }, // Niveau de difficulte du cours
+    domain: { type: String, required: true }, // Domaine dans lequel se situe le cours
     duration: { type: Number, required: true },     // Temps estimer pour finir le cours
-    theme: [{ type: String, required: true, index: true}], // Updated to store multiple tags
+    theme: [{ type: String, required: true, index: true}], // Les themes associe au cours
     rating: { type: Number, default: 0 },
     syllabus: [{ type: String, required: true }]     // Programme du cours
 }, { timestamps: true });
