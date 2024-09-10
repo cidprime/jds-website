@@ -59,8 +59,10 @@ exports.signin = async (req, res, next) => {
     if(!valid) return next(errorHandler(401, 'Wrong credentials!'));
 
     const token = generateToken(user._id, user.role);
-    const { password: pass, role: role, ...rest } = user._doc; // return result without password
-    res.cookie('access_token', token, { httpOnly: true }).status(200).json(rest);
+    const { password: pass, role, ...rest } = user._doc; // return result without password and role
+    res.cookie('access_token', token, { httpOnly: true })
+      .status(200)
+      .json(rest);
 
   } catch(error) {
     next(error);
