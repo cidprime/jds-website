@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const generateToken = require('../utils/tokenUtils');
 const errorHandler = require('../utils/errorHandler');
+const capitalizeFirstLetter = require('../utils/capitalizeFirstLetter');
 
 // Inscription d'un nouvel utilisateur
 /**
@@ -28,7 +29,12 @@ exports.signup = async (req, res, next) => {
     });
 
     await user.save();
-    return res.status(201).json("Successful registration");
+    const token = generateToken(user._id, user.role);
+    const { password: pass, role, ...rest } = user._doc;
+    
+    res.cookie('access_token', token, { httpOnly: true })
+      .status(200)
+      .json(rest);
 
   } catch (error) {
     next(error);
@@ -63,6 +69,48 @@ exports.signin = async (req, res, next) => {
     res.cookie('access_token', token, { httpOnly: true })
       .status(200)
       .json(rest);
+
+  } catch(error) {
+    next(error);
+  }
+}
+
+exports.google = async (req, res, next) => {
+  const { email, name, avatar } = req.body;
+  try{
+    const user = await User.findOne({ email });
+    if(user) {
+      const token = generateToken(user._id, user.role);
+      const { password: pass, role, ...rest } = user._doc; // return result without password and role
+      res.cookie('access_token', token, { httpOnly: true })
+        .status(200)
+        .json(rest);
+    } else {
+      const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+
+      const hash = await bcrypt.hash(generatedPassword, 10);
+
+      const nameArray = name.toLowerCase().split(' ').map(word => capitalizeFirstLetter(word));
+      const [firstname, ...lastnameArray] = nameArray;
+      const lastname = lastnameArray.join(' ');
+
+      const user = new User({
+        firstname,
+        lastname,
+        email,
+        password: hash,
+        avatar
+      });
+  
+      await user.save();
+      const token = generateToken(user._id, user.role);
+      const { password: pass, role, ...rest } = user._doc;
+
+      res.cookie('access_token', token, { httpOnly: true })
+        .status(200)
+        .json(rest);
+      
+    }
 
   } catch(error) {
     next(error);

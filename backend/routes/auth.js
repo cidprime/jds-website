@@ -6,6 +6,8 @@ const verifyToken = require('../middlewares/verifyToken');
 
 router.post('/signup', authCtrl.signup);
 router.post('/signin', authCtrl.signin);
+router.post('/google', authCtrl.google);
+
 router.get('/signout', authCtrl.signout);
 router.get('/me', verifyToken, authCtrl.me);
 
