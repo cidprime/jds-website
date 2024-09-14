@@ -5,6 +5,7 @@ export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(null);
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -24,7 +25,6 @@ export default function SignUp() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
       if(data.success === false) {
         setLoading(false);
         setError(data.message);
