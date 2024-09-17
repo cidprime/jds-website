@@ -1,3 +1,4 @@
+import { FaGoogle } from 'react-icons/fa';
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { app } from '../firebase';
 import { useDispatch } from 'react-redux';
@@ -37,7 +38,8 @@ export default function OAuth() {
   }
 
   return (
-    <button onClick={handleGoogleClick} type='button' className='bg-red-800 text-white p-2 uppercase rounded-lg hover:opacity-95'>
+    <button onClick={handleGoogleClick} type='button' className='flex justify-center gap-4 items-center bg-red-800 text-white p-2 uppercase rounded-lg hover:opacity-95'>
+      <FaGoogle />
       Continue with Google
     </button>
   )
