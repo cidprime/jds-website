@@ -73,7 +73,8 @@ exports.modifyUser = async (req, res, next) => {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        avatar: req.body.avatar
       }
     } , { new: true });
 

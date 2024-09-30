@@ -10,7 +10,7 @@ const isAdmin = require('../middlewares/isAdmin');
 router.get('/', verifyToken, isAdmin, userCtrl.getAllUsers);
 router.get('/:id', verifyToken, userCtrl.getOneUser);
 
-router.put('/:id', verifyToken, userCtrl.modifyUser);
+router.put('/update/:id', verifyToken, userCtrl.modifyUser);
 router.delete('/:id', verifyToken, userCtrl.deleteUser);
 
 
