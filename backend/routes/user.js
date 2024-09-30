@@ -11,7 +11,7 @@ router.get('/', verifyToken, isAdmin, userCtrl.getAllUsers);
 router.get('/:id', verifyToken, userCtrl.getOneUser);
 
 router.put('/update/:id', verifyToken, userCtrl.modifyUser);
-router.delete('/:id', verifyToken, userCtrl.deleteUser);
+router.delete('/delete/:id', verifyToken, userCtrl.deleteUser);
 
 
 module.exports = router;
