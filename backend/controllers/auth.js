@@ -30,7 +30,7 @@ exports.signup = async (req, res, next) => {
 
     await user.save();
     const token = generateToken(user._id, user.role);
-    const { password: pass, role, ...rest } = user._doc;
+    const { password: pass, ...rest } = user._doc;
     
     res.cookie('access_token', token, { httpOnly: true })
       .status(200)
@@ -65,7 +65,7 @@ exports.signin = async (req, res, next) => {
     if(!valid) return next(errorHandler(401, 'Wrong credentials!'));
 
     const token = generateToken(user._id, user.role);
-    const { password: pass, role, ...rest } = user._doc; // return result without password and role
+    const { password: pass, ...rest } = user._doc; // return result without password
     res.cookie('access_token', token, { httpOnly: true })
       .status(200)
       .json(rest);
@@ -81,7 +81,7 @@ exports.google = async (req, res, next) => {
     const user = await User.findOne({ email });
     if(user) {
       const token = generateToken(user._id, user.role);
-      const { password: pass, role, ...rest } = user._doc; // return result without password and role
+      const { password: pass, ...rest } = user._doc; // return result without password and role
       res.cookie('access_token', token, { httpOnly: true })
         .status(200)
         .json(rest);

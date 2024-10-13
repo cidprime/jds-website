@@ -7,9 +7,9 @@ const verifyToken  = require('../middlewares/verifyToken');
 const isAuthorized = require('../middlewares/isAuthorized');
 const isAdmin = require('../middlewares/isAdmin');
 
-router.post('/', verifyToken, isAuthorized, multer, courseCtrl.createCourse);
-router.put('/:id', verifyToken, isAuthorized, multer, courseCtrl.modifyCourse);
-router.delete('/:id', verifyToken, isAdmin, courseCtrl.deleteCourse);
+router.post('/create', verifyToken, isAuthorized, multer, courseCtrl.createCourse);
+router.put('/modify/:id', verifyToken, isAuthorized, multer, courseCtrl.modifyCourse);
+router.delete('/delete/:id', verifyToken, isAdmin, courseCtrl.deleteCourse);
 
 router.get('/', courseCtrl.getAllCourses);
 router.get('/:id/info', courseCtrl.getCourseInfo);
