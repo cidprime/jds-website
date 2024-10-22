@@ -9,6 +9,7 @@ import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
 import AuthorizedPrivateRoute from './components/AuthorizedPrivateRoute'
 import CreateCourse from './pages/CreateCourse'
+import CreateSections from './pages/CreateSections'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         </Route>
         <Route element={<AuthorizedPrivateRoute />}>
           <Route path='/create-course' element={<CreateCourse />} />
+          <Route path='/create-sections' element={<CreateSections />} />
         </Route>
         <Route path='/about' element={<About />} />
       </Routes>
