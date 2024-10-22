@@ -4,6 +4,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '../firebase'
 import { FaEdit } from "react-icons/fa"
 import { updateUserFailure, updateUserSuccess, updateUserStart, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutStart, signOutFailure, signOutSuccess } from '../redux/user/userSlice'
+import { Link } from "react-router-dom"
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -138,6 +139,9 @@ export default function Profile() {
         <button disabled={loading} className='bg-blue-950 text-white rounded-md p-2 uppercase hover:opacity-95 disabled:opacity-80'>
           {loading ? 'Loading...' : 'Update'}
         </button>
+        {currentUser.role !== 4181 && <Link className="bg-green-700 text-white p-2 rounded-lg text-center uppercase hover:opacity-95" to={"/create-course"}>
+          Create Course
+        </Link>}
       </form>
       <div className="flex justify-between mt-2">
         <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete account</span>

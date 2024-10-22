@@ -7,6 +7,8 @@ import Profile from './pages/Profile'
 import About from './pages/About'
 import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
+import AuthorizedPrivateRoute from './components/AuthorizedPrivateRoute'
+import CreateCourse from './pages/CreateCourse'
 
 export default function App() {
   return (
@@ -18,6 +20,9 @@ export default function App() {
         <Route path='/sign-up' element={<SignUp />} />
         <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
+        </Route>
+        <Route element={<AuthorizedPrivateRoute />}>
+          <Route path='/create-course' element={<CreateCourse />} />
         </Route>
         <Route path='/about' element={<About />} />
       </Routes>
