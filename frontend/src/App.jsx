@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute'
 import AuthorizedPrivateRoute from './components/AuthorizedPrivateRoute'
 import CreateCourse from './pages/CreateCourse'
 import CreateSections from './pages/CreateSections'
+import CourseInfo from './pages/CourseInfo'
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
       <Header/>
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/:id/info' element={<CourseInfo />} />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />
         <Route element={<PrivateRoute />}>

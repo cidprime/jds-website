@@ -128,7 +128,7 @@ export default function CreateCourse() {
           
           <input onChange={handleChange} type="text" placeholder='Domain (ex: Informatique, Marketing)' className='border p-2 rounded-md focus:outline-blue-400' id='domain' required/>
 
-          <input onChange={handleChange} type="number" id="duration" min="10" placeholder='duree estimee du cours (en min)' className='border p-2 rounded-md focus:outline-blue-400' required/>
+          <input onChange={handleChange} type="number" id="duration" min="1" placeholder='duree estimee du cours (en heures)' className='border p-2 rounded-md focus:outline-blue-400' required/>
 
           <textarea onChange={handleChange} type="text" placeholder='Programme du cours' className='border p-2 rounded-md focus:outline-blue-400' id='syllabus' required/>
   
