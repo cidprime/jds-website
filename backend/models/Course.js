@@ -5,6 +5,8 @@ const courseSchema = new Schema({
     title: { type: String, required: true, index: true }, // Adding index to optimize search
     description: { type: String, required: true },
     imageUrl: { type: String, required: true },
+    previewVideoUrl: { type: String, required: true },
+    previewText: { type: String, required: true },
     sections: [{ type: Schema.Types.ObjectId, ref: 'Section', required: true }],
     createdBy: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
     price: { type: Number, default: 0 },    // Prix du cours si payant
@@ -14,6 +16,7 @@ const courseSchema = new Schema({
     duration: { type: Number, default: 1, required: true },    // Temps estimer pour finir le cours
     theme: [{ type: Array, required: true, index: true}], // Les themes associes au cours
     rating: { type: Number, default: 0 },
+    reviews: { type: Number, default: 0 },
     syllabus: [{ type: String, required: true }]     // Programme du cours
 }, { timestamps: true });
 
