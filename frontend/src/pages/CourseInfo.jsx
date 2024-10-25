@@ -37,13 +37,17 @@ export default function CourseInfo() {
             <div className="mt-6 flex gap-4 items-center">
               <span className="text-black font-bold text-sm">Ce cours vous intéresse ?</span>
               {course.isFree ? (
-                <button className="bg-blue-800 text-center text-white px-8 py-2 rounded-lg hover:bg-blue-900">
-                  Commencer
-                </button>
+                <Link to={`/${course._id}/course-content`}>
+                  <button className="bg-blue-800 text-center text-white px-8 py-2 rounded-lg hover:bg-blue-900">
+                    Commencer
+                  </button>
+                </Link>
               ) : (
-                <button className="bg-green-700 text-center text-white px-8 py-2 rounded-lg hover:bg-green-800">
-                  Acheter
-                </button>
+                <Link to={`/${course._id}/course-content`}>
+                  <button className="bg-green-700 text-center text-white px-8 py-2 rounded-lg hover:bg-green-800">
+                    Acheter
+                  </button>
+                </Link>
               )}
             </div>
           </div>
@@ -91,7 +95,8 @@ export default function CourseInfo() {
         {/* Aperçu du cours */}
         <div className="py-5 bg-white">
           <div className="px-5">
-            <h2 className="text-1xl font-bold text-black mb-6">Aperçu du cours</h2>
+            <h2 className="text-1xl font-bold text-black mb-1">Aperçu du cours</h2>
+            <hr className="border-solid border-1 border-gray-300 mb-5"/>
             <div className="mb-6">
 
               <iframe className="w-full h-96 object-cover rounded-lg" src={course.previewVideoUrl} title="YouTube video player"
@@ -105,7 +110,8 @@ export default function CourseInfo() {
         {/* Table des matières */}
         <div className="bg-gray-50 py-5">
           <div className="mx-auto px-5">
-            <h2 className="text-1xl font-bold text-black mb-6">Table des matières</h2>
+            <h2 className="text-1xl font-bold text-black mb-1">Table des matières</h2>
+            <hr className="border-solid border-1 border-gray-300 mb-5"/>
             {course.sections.map((section, index) => (
               <div key={index} className="mb-6">
                 <h3 className="text-2xl font-semibold text-gray-800">{`Partie ${index + 1}: ${section.title}`}</h3>
@@ -122,7 +128,8 @@ export default function CourseInfo() {
         {/* Contributeurs */}
         <div className="bg-white py-5">
           <div className="mx-auto px-5">
-            <h2 className="text-1xl font-bold text-gray-800 mb-6">Contributeurs</h2>
+            <h2 className="text-1xl font-bold text-black mb-1">Contributeurs</h2>
+            <hr className="border-solid border-1 border-gray-300 mb-5"/>
             <ul className="space-y-4">
               {course.createdBy.map((contributor, index) => (
                 <li key={index} className="flex gap-2 text-base text-gray-700">

@@ -51,9 +51,20 @@ exports.getAllCourses = async (req, res, next) => {
 exports.getCourseContent = async (req, res, next) => {
   try{
     const course = await Course.findById(req.params.id)
-      .select('title sections createdBy level duration syllabus')
+      .select('-imageUrl')
       .populate({
         path: 'createdBy', select: 'firstname lastname'
+      })
+      .populate({
+        path: 'sections',
+        populate: [
+          {
+            path: 'chapters'
+          },
+          {
+            path: 'quiz'
+          }
+        ]
       });
     
     if (!course) return res.status(404).send('Course content not found.');

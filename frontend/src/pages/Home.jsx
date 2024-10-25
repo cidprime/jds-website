@@ -18,13 +18,13 @@ export default function Home() {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-800 mb-8">Nos Cours Disponibles</h1>
         
-        <div className="space-y-6">
+        <div className="space-y-4">
           {courses.map((course) => (
             <Link to={`/${course._id}/info`} key={course._id} className="block">
               <div className="flex bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 p-2">
                 
-                <div className="w-auto object-cover h-full">
-                  <img
+                <div className="max-w-64 max-h-40 object-cover">
+                  <img className="object-cover w-44 h-auto sm:w-64 sm:h-40"
                     src={course.imageUrl}
                     alt={course.title}
                   />
@@ -34,10 +34,10 @@ export default function Home() {
 
                   <div>
                     <span className="text-xs sm:text-sm text-blue-700 uppercase font-semibold">{course.domain} - Cours</span>
-                    <h2 className="text-sm sm:text-xl font-bold text-gray-800 mt-1">{course.title}</h2>
+                    <h2 className="text-sm sm:text-xl font-bold text-black">{course.title}</h2>
                   </div>
                   
-                  <div className="mt-2 flex items-center justify-between gap-2">
+                  <div className="mt-1 flex items-center gap-2">
 
                     <div className="flex items-center gap-2 text-sm sm:text-base">
                       <FaSignal title="Niveau"/>
@@ -62,7 +62,7 @@ export default function Home() {
 
                   </div>
 
-                  <p className="text-sm sm:text-base text-gray-600 mt-2">
+                  <p className="hidden sm:block text-gray-600 mt-1">
                     {course.description}
                   </p>
                 </div>
