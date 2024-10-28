@@ -60,9 +60,6 @@ exports.getCourseContent = async (req, res, next) => {
         populate: [
           {
             path: 'chapters'
-          },
-          {
-            path: 'quiz'
           }
         ]
       });
@@ -106,6 +103,42 @@ exports.getCourseInfo = async (req, res, next) => {
     next(err);
   }
 };
+
+async function addReview(courseId, userId, rating, comment) {
+  try {
+    // Trouver le cours à mettre à jour
+    const course = await Course.findById(courseId);
+
+    if (!course) return next(errorHandler(404, 'Course not found'));
+
+    // Vérifier si l'utilisateur a déjà laissé un avis (facultatif, pour éviter les doublons)
+    const existingReview = course.reviews.find(review => review.userId.toString() === userId);
+    if (existingReview) {
+      return { error: "Vous avez déjà laissé un avis sur ce cours" };
+    }
+
+    // Ajouter l'avis au tableau des avis
+    const newReview = {
+      userId,
+      rating,
+      comment,
+    };
+    course.reviews.push(newReview);
+
+    // Mettre à jour le nombre de reviews et la note moyenne
+    course.numberOfReviews = course.reviews.length;
+    const totalRating = course.reviews.reduce((sum, review) => sum + review.rating, 0);
+    course.rating = totalRating / course.numberOfReviews;
+
+    // Sauvegarder le cours mis à jour
+    await course.save();
+    
+    return { success: true, message: "Votre avis a été ajouté avec succès" };
+  } catch (err) {
+    next(err);
+  }
+}
+
 
 /**
  * Creates a new course based on the request data.

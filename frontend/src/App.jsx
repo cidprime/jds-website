@@ -12,6 +12,7 @@ import CreateCourse from './pages/CreateCourse'
 import CreateSections from './pages/CreateSections'
 import CourseInfo from './pages/CourseInfo'
 import CourseContent from './pages/CourseContent'
+import Quiz from './pages/Quiz'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
         <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
           <Route path='/:id/course-content' element={<CourseContent />} />
+          <Route path='/quiz/:id' element={<Quiz />} />
         </Route>
         <Route element={<AuthorizedPrivateRoute />}>
           <Route path='/create-course' element={<CreateCourse />} />
