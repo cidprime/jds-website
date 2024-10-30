@@ -4,7 +4,6 @@ const { Schema } = mongoose;
 const reviewSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Référence à l'utilisateur qui donne l'avis
     rating: { type: Number, required: true, min: 1, max: 5 }, // Note donnée, entre 1 et 5
-    comment: { type: String }, // Commentaire optionnel de l'utilisateur
 }, { timestamps: true });
   
 

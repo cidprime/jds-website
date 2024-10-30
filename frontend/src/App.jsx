@@ -13,6 +13,7 @@ import CreateSections from './pages/CreateSections'
 import CourseInfo from './pages/CourseInfo'
 import CourseContent from './pages/CourseContent'
 import Quiz from './pages/Quiz'
+import Footer from './components/Footer'
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
         </Route>
         <Route path='/about' element={<About />} />
       </Routes>
+      <Footer/>
     </BrowserRouter>
   )
 }

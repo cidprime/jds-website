@@ -104,7 +104,7 @@ exports.getCourseInfo = async (req, res, next) => {
   }
 };
 
-async function addReview(courseId, userId, rating, comment) {
+async function addReview(courseId, userId, rating) {
   try {
     // Trouver le cours à mettre à jour
     const course = await Course.findById(courseId);
@@ -121,7 +121,6 @@ async function addReview(courseId, userId, rating, comment) {
     const newReview = {
       userId,
       rating,
-      comment,
     };
     course.reviews.push(newReview);
 
