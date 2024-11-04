@@ -23,6 +23,8 @@ export default function CreateCourse() {
     duration: 0,
     sections: [],
   });
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   console.log(courseData.imageUrl);
 
@@ -182,34 +184,28 @@ export default function CreateCourse() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/courses/create", {
+      setLoading(true);
+      setError(false);
+      const res = await fetch("/api/courses/create", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(courseData),
       });
-      if (response.ok) {
-        alert("Cours créé avec succès !");
-        setCourseData({
-          title: "",
-          description: "",
-          imageUrl: "",
-          previewVideoUrl: "",
-          previewText: "",
-          createdBy: currentUser._id,
-          price: 0,
-          isFree: false,
-          level: "Beginner",
-          domain: "",
-          duration: 0,
-          sections: [],
-        });
 
-      } else {
+      const data = await res.json();
+      setLoading(false);
+
+      if(data.success === false) {
+        setError(data.message);
         alert("Erreur lors de la création du cours");
       }
+      
 
     } catch (error) {
-      console.error("Erreur :", error);
+      setError(error.message);
+      setLoading(false)
       alert("Erreur lors de la création du cours");
     }
   };
@@ -236,6 +232,18 @@ export default function CreateCourse() {
           <textarea
             name="description"
             value={courseData.description}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg"
+            required
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-gray-700">Video de presentation du cours :</label>
+          <input
+            type='url'
+            name="previewVideoUrl"
+            value={courseData.previewVideoUrl}
             onChange={handleChange}
             className="w-full p-3 border rounded-lg"
             required
@@ -502,8 +510,9 @@ export default function CreateCourse() {
 
         {/* Soumission du formulaire */}
         <button type="submit" className="bg-green-600 text-white px-6 py-3 rounded-lg mt-8">
-          Créer le cours
+          {loading ? 'enregistrement...' : 'Créer le cours'}
         </button>
+        {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
       </form>
     </div>
   );
