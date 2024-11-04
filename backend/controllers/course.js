@@ -1,4 +1,8 @@
 const Course = require('../models/Course');
+const Section = require('../models/Section');
+const Chapter = require('../models/Chapter');
+const Quiz = require('../models/Quiz');
+
 const errorHandler = require('../utils/errorHandler');
 const fs = require('fs').promises;
 
@@ -139,23 +143,66 @@ async function addReview(courseId, userId, rating) {
 }
 
 
-/**
- * Creates a new course based on the request data.
- * Parses the course object from the request body, removes unnecessary fields (_id, _userId),
- * and saves the course with an image URL if a file is uploaded.
- * Responds with a success message if the course is saved successfully, otherwise handles errors.
- *
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- * @returns {Object} JSON response indicating the status of the course creation.
- */
 exports.createCourse = async (req, res, next) => { 
+  const courseData = req.body;
+  const { title, description, imageUrl, previewVideoUrl, previewText, createdBy, price, isFree, level, domain, duration, sections } = courseData;
+
   try {
-    const newCourse = await Course.create(req.body);
-    res.status(201).json(newCourse);
+    const sectionIds = []; // Stockage des ObjectId des sections pour le cours
+
+    // Création des sections avec chapitres et quiz
+    for (const sectionData of sections) {
+      const chapterIds = []; // Stockage des ObjectId des chapitres pour chaque section
+
+      // Création des chapitres
+      for (const chapterData of sectionData.chapters) {
+        const chapter = new Chapter(chapterData);
+        await chapter.save();
+        chapterIds.push(chapter._id); // Ajout de l'ObjectId du chapitre créé
+      }
+
+      // Création du quiz (si présent dans la section)
+      let quizId = null;
+      if (sectionData.quiz) {
+        const quiz = new Quiz(sectionData.quiz);
+        await quiz.save();
+        quizId = quiz._id;
+      }
+
+      // Création de la section avec les chapitres et le quiz associés
+      const section = new Section({
+        title: sectionData.title,
+        chapters: chapterIds, // Références aux chapitres créés
+        quiz: quizId, // Référence au quiz créé
+      });
+      await section.save();
+      sectionIds.push(section._id); // Ajout de l'ObjectId de la section créée
+    }
+
+    // Création du cours avec toutes les sections associées
+    const course = new Course({
+      title,
+      description,
+      imageUrl,
+      previewVideoUrl,
+      previewText,
+      createdBy,
+      price,
+      isFree,
+      level,
+      domain,
+      duration,
+      sections: sectionIds, // Ajoute les références des sections(partie) créées
+    });
+
+    await course.save();
+
+    return res.status(201).json({ message: 'Course created successfully' });
+    // return { success: true, course };
 
   } catch (err) {
+    // console.error("Erreur lors de la création du cours complet :", error);
+    // return { success: false, error: "Erreur lors de la création du cours complet" };
     next(err);
   }
 };

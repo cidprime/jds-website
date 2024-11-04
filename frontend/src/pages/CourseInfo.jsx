@@ -77,7 +77,7 @@ export default function CourseInfo() {
                 {course.level === "Beginner" ? <span className="text-sm font-normal text-gray-500">Aucune connaissance prérequise</span> : ""}
               </li>
               <li className="flex gap-1 text-gray-900">
-                <span>Temps estimer pour terminer le cours</span>
+                <span>Temps estimé pour terminer le cours : </span>
                 <span>{course.duration} heures</span>
               </li>
               <hr className="border-solid border-1 border-black"/>
