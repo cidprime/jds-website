@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
+// les scores des quiz 
+
 export default function Quiz() {
   const { id } = useParams(); // Récupère l'ID de la section depuis l'URL
   const [quiz, setQuiz] = useState(null);

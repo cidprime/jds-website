@@ -11,7 +11,6 @@ const sectionRoutes = require('./routes/section');
 const chapterRoutes = require('./routes/chapter');
 const quizRoutes = require('./routes/quiz');
 const enrollmentRoutes = require('./routes/enrollment');
-const progressRoutes = require('./routes/progress');
 
 const app = express();
 
@@ -35,7 +34,6 @@ app.use('/api/sections', sectionRoutes);
 app.use('/api/chapters', chapterRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
-app.use('/api/progress', progressRoutes);
 
 
 app.use((err, req, res, next) => {
