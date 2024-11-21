@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FaArrowLeft, FaStar } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 export default function CourseInfo() {
   const { id } = useParams(); // Récupère l'ID du cours depuis l'URL
   const [course, setCourse] = useState(null);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     // Récupération des informations détaillées d'un cours via l'API
@@ -13,6 +17,43 @@ export default function CourseInfo() {
       .then((data) => setCourse(data))
       .catch((error) => console.error("Erreur lors de la récupération des informations du cours :", error));
   }, [id]);
+
+  // Vérifie si l'utilisateur est déjà inscrit
+  useEffect(() => {
+    fetch(`/api/enrollments/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: currentUser._id, courseId: id }),
+    })
+      .then((response) => response.json())
+      .then((data) => setIsEnrolled(data.isEnrolled))
+      .catch((error) => console.error("Erreur lors de la vérification de l'inscription :", error));
+  }, [id]);
+
+  // Gère l'inscription ou le démarrage du cours
+  const handleStartCourse = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/enrollments/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: currentUser._id, courseId: id }),
+      });
+
+      const data = await response.json();
+
+      if (data.status === "registered") {
+        setIsEnrolled(true);
+      } else if (data.status === "payment_required") {
+        // Logique de paiement pour les cours payants
+        alert("Ce cours est payant, veuillez effectuer le paiement pour commencer!!!.");
+      }
+    } catch (error) {
+      console.error("Erreur lors du démarrage du cours :", error);
+    }
+    setLoading(false);
+  };
+
 
   if (!course) {
     return <p className="text-center text-gray-600">Chargement des informations du cours...</p>;
@@ -38,12 +79,19 @@ export default function CourseInfo() {
               <span className="text-black font-bold text-sm">Ce cours vous intéresse ?</span>
               {course.isFree ? (
                 <Link to={`/${course._id}/course-content`}>
-                  <button className="bg-blue-800 text-center text-white px-8 py-2 rounded-lg hover:bg-blue-900">
+                  {isEnrolled ? (
+                    <button onClick={handleStartCourse} className="bg-blue-800 text-center text-white px-8 py-2 rounded-lg hover:bg-blue-900">
                     Commencer
                   </button>
+                  ) : (
+                    <button onClick={handleStartCourse} className="bg-blue-700 text-center text-white px-8 py-2 rounded-lg hover:bg-blue-800">
+                    Repprendre
+                  </button>
+                  ) }
+                  
                 </Link>
               ) : (
-                <Link to={`/${course._id}/course-content`}>
+                <Link onClick={handleStartCourse} to={`/${course._id}/course-content`}>
                   <button className="bg-green-700 text-center text-white px-8 py-2 rounded-lg hover:bg-green-800">
                     Acheter
                   </button>

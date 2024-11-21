@@ -1,13 +1,23 @@
+const Course = require('../models/Course');
 const Enrollment = require('../models/Enrollment');
 
 exports.enrollAndTrackProgress = async (req, res) => {
   const { userId, courseId } = req.body;
 
   try {
-    // Vérifie si l'utilisateur est déjà inscrit
+    // Vérifier si l'utilisateur est déjà inscrit
     const existingEnrollment = await Enrollment.findOne({ userId, courseId });
     if (existingEnrollment) {
-      return res.status(400).json({ error: "Déjà inscrit à ce cours." });
+      return res.status(400).json({ message: "User already registered", status: "registered"});
+    }
+
+    // Récupère le cours pour vérifier s'il est gratuit ou payant
+    const course = await Course.findById(courseId);
+    if (!course) return res.status(404).json({ error: "Course not found" });
+
+    // Si le cours est payant, on renvoie un message indiquant qu’un paiement est requis
+    if (!course.isFree) {
+      return res.status(402).json({ message: "payment required", status: "payment_required" });
     }
 
     // Crée un nouveau document Enrollment pour l'inscription et le suivi
@@ -24,7 +34,7 @@ exports.enrollAndTrackProgress = async (req, res) => {
     });
 
     await NewEnrollment.save();
-    res.status(201).json({ message: "Inscription réussie avec suivi de progression"});
+    res.status(201).json({ message: "Successful registration", status: "registered"});
 
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -103,5 +113,3 @@ exports.deleteEnrollment = async (req, res, next) => {
     res.status(400).json({ error: err.message });
   }
 }
-
-
