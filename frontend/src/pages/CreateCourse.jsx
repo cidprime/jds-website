@@ -3,6 +3,8 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '../firebase'
 import { useSelector } from "react-redux";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function CreateCourse() {
   const { currentUser } = useSelector((state) => state.user);
   const [uploading, setUploading] = useState(false);
@@ -25,7 +27,6 @@ export default function CreateCourse() {
   });
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const API_URL = import.meta.env.VITE_API_URL;
 
   console.log(courseData.imageUrl);
 

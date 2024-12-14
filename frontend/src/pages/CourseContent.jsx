@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { FaArrowLeft, FaClock, FaSignal } from "react-icons/fa";
 import { useParams, Link } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function CourseContent() {
   const { id } = useParams(); // ID du cours à partir de l'URL
   const [course, setCourse] = useState(null);
   const [hasAccess, setHasAccess] = useState(false); // Vérifie si l'utilisateur a accès au contenu
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Récupère les informations du cours, sections, chapitres, etc.

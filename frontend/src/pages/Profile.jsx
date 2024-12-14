@@ -6,6 +6,8 @@ import { FaEdit } from "react-icons/fa"
 import { updateUserFailure, updateUserSuccess, updateUserStart, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutStart, signOutFailure, signOutSuccess } from '../redux/user/userSlice'
 import { Link } from "react-router-dom"
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileRef = useRef(null);
@@ -15,7 +17,6 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
-  const API_URL = import.meta.env.VITE_API_URL;
 
 
   useEffect(() => {

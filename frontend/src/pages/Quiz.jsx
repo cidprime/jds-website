@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 // les scores des quiz 
 
 export default function Quiz() {
@@ -8,7 +10,6 @@ export default function Quiz() {
   const [quiz, setQuiz] = useState(null);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchQuiz = async () => {

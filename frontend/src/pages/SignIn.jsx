@@ -4,13 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInfailure } from '../redux/user/userSlice';
 import OAuth from '../components/OAuth';
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
   const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
     setFormData({

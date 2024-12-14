@@ -3,13 +3,14 @@ import { useParams, Link } from "react-router-dom";
 import { FaArrowLeft, FaStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function CourseInfo() {
   const { id } = useParams(); // Récupère l'ID du cours depuis l'URL
   const [course, setCourse] = useState(null);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [loading, setLoading] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Récupération des informations détaillées d'un cours via l'API

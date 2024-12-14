@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import OAuth from '../components/OAuth';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(null);
-  const API_URL = import.meta.env.VITE_API_URL;
   
   const handleChange = (e) => {
     setFormData({
