@@ -25,6 +25,7 @@ export default function CreateCourse() {
   });
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   console.log(courseData.imageUrl);
 
@@ -186,7 +187,7 @@ export default function CreateCourse() {
     try {
       setLoading(true);
       setError(false);
-      const res = await fetch("/api/courses/create", {
+      const res = await fetch(`${API_URL}/api/courses/create`, {
         method: "POST",
         headers: { 
           'Content-Type': 'application/json'

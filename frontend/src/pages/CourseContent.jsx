@@ -6,10 +6,11 @@ export default function CourseContent() {
   const { id } = useParams(); // ID du cours à partir de l'URL
   const [course, setCourse] = useState(null);
   const [hasAccess, setHasAccess] = useState(false); // Vérifie si l'utilisateur a accès au contenu
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Récupère les informations du cours, sections, chapitres, etc.
-    fetch(`/api/courses/${id}/content`)
+    fetch(`${API_URL}/api/courses/${id}/content`)
       .then((response) => response.json())
       .then((data) => {
         setCourse(data);

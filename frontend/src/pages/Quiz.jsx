@@ -8,11 +8,12 @@ export default function Quiz() {
   const [quiz, setQuiz] = useState(null);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        const response = await fetch(`/api/quiz/${id}`);
+        const response = await fetch(`${API_URL}/api/quiz/${id}`);
         const data = await response.json();
         setQuiz(data.quiz); // Assigne les données à l'état
       } catch (error) {

@@ -15,6 +15,7 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
+  const API_URL = import.meta.env.VITE_API_URL;
 
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export default function Profile() {
     try{
       dispatch(updateUserStart());
 
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`${API_URL}/api/user/update/${currentUser._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +81,7 @@ export default function Profile() {
   const handleDeleteUser = async () => {
     try{
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`${API_URL}/api/user/delete/${currentUser._id}`, {
         method: 'DELETE'
       });
 
@@ -99,7 +100,7 @@ export default function Profile() {
   const handleSignOut = async () => {
     try{
       dispatch(signOutStart());
-      const res = await fetch('/api/auth/signout');
+      const res = await fetch(`${API_URL}/api/auth/signout`);
 
       const data = await res.json();
       if(data.success === false) {

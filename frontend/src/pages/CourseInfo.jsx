@@ -9,10 +9,11 @@ export default function CourseInfo() {
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [loading, setLoading] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Récupération des informations détaillées d'un cours via l'API
-    fetch(`/api/courses/${id}/info`)
+    fetch(`${API_URL}/api/courses/${id}/info`)
       .then((response) => response.json())
       .then((data) => setCourse(data))
       .catch((error) => console.error("Erreur lors de la récupération des informations du cours :", error));
@@ -20,7 +21,7 @@ export default function CourseInfo() {
 
   // Vérifie si l'utilisateur est déjà inscrit
   useEffect(() => {
-    fetch(`/api/enrollments/`, {
+    fetch(`${API_URL}/api/enrollments/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId: currentUser._id, courseId: id }),
@@ -34,7 +35,7 @@ export default function CourseInfo() {
   const handleStartCourse = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/enrollments/", {
+      const response = await fetch(`${API_URL}/api/enrollments/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: currentUser._id, courseId: id }),

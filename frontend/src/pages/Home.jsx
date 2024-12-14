@@ -4,10 +4,11 @@ import { FaSignal, FaClock } from "react-icons/fa";
 
 export default function Home() {
   const [courses, setCourses] = useState([]);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Récupération des cours via l'API
-    fetch("/api/courses")
+    fetch(`${API_URL}/api/courses`)
       .then((response) => response.json())
       .then((data) => setCourses(data))
       .catch((error) => console.error("Erreur lors de la récupération des cours :", error));
