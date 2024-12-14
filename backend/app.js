@@ -22,7 +22,12 @@ app.use(cookieParser());
 connectDB();
 
 // Autorise les requetes venant d'autres port.
-app.use(cors());
+app.use(cors(
+  {
+    origin: 'https://jds-frontend.onrender.com', // URL de ton frontend
+    methods: ['GET', 'POST'], // Méthodes autorisées
+  }
+));
 
 // Les Routes
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
