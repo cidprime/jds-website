@@ -21,13 +21,21 @@ app.use(cookieParser());
 // Connexion à MongoDB
 connectDB();
 
-// Autorise les requetes venant d'autres port.
-app.use(cors(
-  {
-    origin: 'https://jds-frontend.onrender.com', // URL de ton frontend
-    methods: ['GET', 'POST'], // Méthodes autorisées
+// Définir les origines autorisées
+const allowedOrigins = [
+  'http://localhost:5173', // Frontend local
+  'https://jds-frontend.onrender.com', // Frontend en production
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origin not allowed by CORS'));
+    }
   }
-));
+}));
 
 // Les Routes
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
