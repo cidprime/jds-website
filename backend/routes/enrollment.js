@@ -5,6 +5,7 @@ const enrollmentCtrl = require('../controllers/enrollment');
 
 router.get('/', enrollmentCtrl.getAllEnrollments);
 router.get('/user/:id', enrollmentCtrl.getUserEnrollment);
+router.get('/:userId/:courseId', enrollmentCtrl.checkEnrollment);
 
 router.post('/', enrollmentCtrl.enrollAndTrackProgress);
 router.put('/:id', enrollmentCtrl.modifyEnrollment);

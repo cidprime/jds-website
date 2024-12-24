@@ -11,15 +11,25 @@ export default function CourseContent() {
 
   useEffect(() => {
     // Récupère les informations du cours, sections, chapitres, etc.
-    fetch(`${API_URL}/api/courses/${id}/content`)
-      .then((response) => response.json())
+    fetch(`${API_URL}/api/courses/${id}/content`, {
+      method: "GET",
+      credentials: 'include' // Inclut les cookies dans la requête
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         setCourse(data);
         // Vérifie si l'utilisateur a accès (si le cours est gratuit ou s'il est déjà payé)
         setHasAccess(data.isFree || data.userHasAccess);
       })
-      .catch((error) => console.error("Erreur lors de la récupération du contenu du cours :", error));
-  }, [id]);
+      .catch((error) =>
+        console.error("Erreur lors de la récupération du contenu du cours :", error)
+      );
+  }, [id]);  
 
   if (!course) return <div>Chargement...</div>;
 

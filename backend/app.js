@@ -11,6 +11,7 @@ const sectionRoutes = require('./routes/section');
 const chapterRoutes = require('./routes/chapter');
 const quizRoutes = require('./routes/quiz');
 const enrollmentRoutes = require('./routes/enrollment');
+const paymentRoutes = require('./routes/payment');
 
 const app = express();
 
@@ -22,19 +23,9 @@ app.use(cookieParser());
 connectDB();
 
 // Définir les origines autorisées
-const allowedOrigins = [
-  'http://localhost:5173', // Frontend local
-  'https://jds-frontend.onrender.com', // Frontend en production
-];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Origin not allowed by CORS'));
-    }
-  }
+  origin: ['http://localhost:5173', 'https://jds-frontend.onrender.com'],
+  credentials: true,
 }));
 
 // Les Routes
@@ -47,6 +38,7 @@ app.use('/api/sections', sectionRoutes);
 app.use('/api/chapters', chapterRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
+app.use('/api/payments', paymentRoutes);
 
 
 app.use((err, req, res, next) => {

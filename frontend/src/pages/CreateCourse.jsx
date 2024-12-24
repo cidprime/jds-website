@@ -19,6 +19,7 @@ export default function CreateCourse() {
     previewText: "",
     createdBy: currentUser._id,
     price: 0,
+    userHasAccess: false,
     isFree: false,
     level: "Beginner",
     domain: "",

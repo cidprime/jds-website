@@ -13,6 +13,8 @@ require('dotenv').config;
  */
 module.exports = async (req, res, next) => {
   const token = req.cookies.access_token;
+  console.log("Cookies reçus (back):", req.cookies);   // Le front reenvoie pas le cookie
+
   if(!token) return next(errorHandler(401, 'Unauthorized'));
 
   try {

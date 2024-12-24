@@ -17,7 +17,7 @@ exports.enrollAndTrackProgress = async (req, res) => {
 
     // Si le cours est payant, on renvoie un message indiquant qu’un paiement est requis
     if (!course.isFree) {
-      return res.status(402).json({ message: "payment required", status: "payment_required" });
+      return res.status(200).json({ message: "payment required", status: "payment_required" });
     }
 
     // Crée un nouveau document Enrollment pour l'inscription et le suivi
@@ -37,6 +37,23 @@ exports.enrollAndTrackProgress = async (req, res) => {
     res.status(201).json({ message: "Successful registration", status: "registered"});
 
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.checkEnrollment = async (req, res) => {
+  const { userId, courseId } = req.params;
+
+  try {
+    const enrollment = await Enrollment.findOne({ userId, courseId });
+
+    if (enrollment) {
+      return res.status(200).json({ isEnrolled: true });
+    } else {
+      return res.status(200).json({ isEnrolled: false });
+    }
+  } catch (err) {
+    console.error("Erreur lors de la vérification de l'inscription :", err.message);
     res.status(500).json({ error: err.message });
   }
 };

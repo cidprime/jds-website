@@ -32,7 +32,7 @@ exports.signup = async (req, res, next) => {
     const token = generateToken(user._id, user.role);
     const { password: pass, ...rest } = user._doc;
     
-    res.cookie('access_token', token, { httpOnly: true })
+    res.cookie('access_token', token, { httpOnly: true, expires: new Date(Date.now() + 24*60*60*1000) })
       .status(200)
       .json(rest);
 
@@ -66,7 +66,7 @@ exports.signin = async (req, res, next) => {
 
     const token = generateToken(user._id, user.role);
     const { password: pass, ...rest } = user._doc; // return result without password
-    res.cookie('access_token', token, { httpOnly: true })
+    res.cookie('access_token', token, { httpOnly: true, expires: new Date(Date.now() + 24*60*60*1000) })
       .status(200)
       .json(rest);
 
@@ -82,7 +82,7 @@ exports.google = async (req, res, next) => {
     if(user) {
       const token = generateToken(user._id, user.role);
       const { password: pass, ...rest } = user._doc; // return result without password and role
-      res.cookie('access_token', token, { httpOnly: true })
+      res.cookie('access_token', token, { httpOnly: true, expires: new Date(Date.now() + 24*60*60*1000) })
         .status(200)
         .json(rest);
     } else {
@@ -106,7 +106,7 @@ exports.google = async (req, res, next) => {
       const token = generateToken(user._id, user.role);
       const { password: pass, role, ...rest } = user._doc;
 
-      res.cookie('access_token', token, { httpOnly: true })
+      res.cookie('access_token', token, { httpOnly: true, expires: new Date(Date.now() + 24*60*60*1000) })
         .status(200)
         .json(rest);
       
