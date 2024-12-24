@@ -13,6 +13,6 @@ router.delete('/delete/:id', verifyToken, isAdmin, courseCtrl.deleteCourse);
 
 router.get('/', courseCtrl.getAllCourses);
 router.get('/:id/info', courseCtrl.getCourseInfo);
-router.get('/:id/content', verifyToken, courseCtrl.getCourseContent); // if is not free pay before
+router.get('/:id/content', courseCtrl.getCourseContent); //verifyToken // if is not free pay before
 
 module.exports = router;
