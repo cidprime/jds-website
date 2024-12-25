@@ -14,6 +14,7 @@ import CourseInfo from './pages/CourseInfo'
 import CourseContent from './pages/CourseContent'
 import Quiz from './pages/Quiz'
 import Footer from './components/Footer'
+import Dashboard from './pages/Dashboard'
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/:id/course-content' element={<CourseContent />} />
           <Route path='/quiz/:id' element={<Quiz />} />
+          <Route path='/dashboard' element={<Dashboard />} />
         </Route>
         <Route element={<AuthorizedPrivateRoute />}>
           <Route path='/create-course' element={<CreateCourse />} />
