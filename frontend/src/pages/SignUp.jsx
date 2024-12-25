@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import OAuth from '../components/OAuth';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -8,6 +8,7 @@ export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(null);
+  const navigate = useNavigate();
   
   const handleChange = (e) => {
     setFormData({
@@ -35,6 +36,7 @@ export default function SignUp() {
       }
       setLoading(false);
       setError(null);
+      navigate('/sign-in');
       
     } catch(err) {
       setLoading(false);
