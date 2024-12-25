@@ -1,0 +1,25 @@
+# Ignorer les fichiers générés automatiquement
+node_modules/
+dist/
+build/
+
+# Fichiers sensibles
+.env
+*.env
+key.txt
+
+# Logs et fichiers temporaires
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+.DS_Store
+
+# Dossiers spécifiques à des outils ou environnements
+.vscode/
+.idea/
+coverage/
+
+# Ignorer les fichiers spécifiques au système
+Thumbs.db
+*.swp
