@@ -59,6 +59,7 @@ export default function Profile() {
 
       const res = await fetch(`${API_URL}/api/user/update/${currentUser._id}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -83,7 +84,8 @@ export default function Profile() {
     try{
       dispatch(deleteUserStart());
       const res = await fetch(`${API_URL}/api/user/delete/${currentUser._id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'include',
       });
 
       const data = await res.json();

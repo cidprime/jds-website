@@ -191,6 +191,7 @@ export default function CreateCourse() {
       setError(false);
       const res = await fetch(`${API_URL}/api/courses/create`, {
         method: "POST",
+        credentials: "include",
         headers: { 
           'Content-Type': 'application/json'
         },
