@@ -29,12 +29,7 @@ exports.signup = async (req, res, next) => {
     });
 
     await user.save();
-    const token = generateToken(user._id, user.role);
-    const { password: pass, ...rest } = user._doc;
-    
-    res.cookie('access_token', token, { httpOnly: true, expires: new Date(Date.now() + 24*60*60*1000) })
-      .status(200)
-      .json(rest);
+    res.status(201).json({ message: 'Account created successfully' });
 
   } catch (error) {
     next(error);
