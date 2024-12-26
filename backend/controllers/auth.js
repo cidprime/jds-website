@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const generateToken = require('../utils/tokenUtils');
 const errorHandler = require('../utils/errorHandler');
 const capitalizeFirstLetter = require('../utils/capitalizeFirstLetter');
+const ROLES = require('../config/roles');
 
 // Inscription d'un nouvel utilisateur
 /**
@@ -94,7 +95,8 @@ exports.google = async (req, res, next) => {
         lastname,
         email,
         password: hash,
-        avatar
+        avatar,
+        role: ROLES.STUDENT // default role
       });
   
       await user.save();
