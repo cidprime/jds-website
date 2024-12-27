@@ -9,7 +9,7 @@ const isAdmin = require('../middlewares/isAdmin');
 
 router.post('/create', verifyToken, isAuthorized, multer, courseCtrl.createCourse);
 router.put('/modify/:id', verifyToken, isAuthorized, multer, courseCtrl.modifyCourse);
-router.delete('/delete/:id', verifyToken, isAdmin, courseCtrl.deleteCourse);
+router.delete('/delete/:id', verifyToken, courseCtrl.deleteCourse);
 
 router.get('/', courseCtrl.getAllCourses);
 router.get('/:id/info', courseCtrl.getCourseInfo);

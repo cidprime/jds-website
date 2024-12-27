@@ -1,3 +1,4 @@
+const ROLES = require('../config/roles');
 const errorHandler = require('../utils/errorHandler');
 const auth = require('./verifyToken');
 /**
@@ -8,7 +9,7 @@ const auth = require('./verifyToken');
  * @param {Function} next - The next middleware function.
  */
 module.exports = (req, res, next) => {
-  if (!req.auth || req.auth.role === '4181') {
+  if (!req.auth || req.auth.role === ROLES.STUDENT) {
     return next(errorHandler(403, 'Forbidden'));
   }
   next();

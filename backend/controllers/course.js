@@ -4,7 +4,9 @@ const Chapter = require('../models/Chapter');
 const Quiz = require('../models/Quiz');
 
 const errorHandler = require('../utils/errorHandler');
+const ROLES = require('../config/roles');
 const fs = require('fs').promises;
+const { ObjectId } = require('mongodb');
 
 /**
  * Retrieves all courses from the database and sends a JSON response with the courses.
@@ -238,15 +240,28 @@ exports.modifyCourse = async (req, res, next) => {
  * @returns {Object} JSON response indicating the result of the deletion operation.
  */
 exports.deleteCourse = async (req, res, next) => {
-  try {
-    const courseId = req.params.id;
-    const course = await Course.findById(courseId);
-    if (!course) return next(errorHandler(404, 'Course not found'));
+  const courseId = req.params.id;
+  const userIdObjectId = new ObjectId(req.auth.userId);
+  
+  const course = await Course.findById(courseId);
+  
+  if (!course) return next(errorHandler(404, 'Course not found'));
+  
+  const createdByArray = course.createdBy;
+  const isUserIdInCreatedBy = createdByArray.some(createdById => userIdObjectId.equals(createdById));
 
-    await Course.findByIdAndDelete(courseId);
-    res.json("Course deleted successfully");
+  if (isUserIdInCreatedBy || req.auth.role === ROLES.ADMIN) {
 
-  } catch (error) {
-    next(err);
+    try {
+      await Course.findByIdAndDelete(courseId);
+      res.json("Course deleted successfully");
+  
+    } catch (error) {
+      next(error);
+    }
+    
+  } else {
+    return next(errorHandler(403, 'You are not authorized to delete this course'));
   }
+
 };
