@@ -218,16 +218,27 @@ exports.createCourse = async (req, res, next) => {
  * @returns {Object} JSON response indicating success or failure of course modification.
  */
 exports.modifyCourse = async (req, res, next) => {
-  try {
-    const course = await Course.findById(req.params.id);
-    if(!course) return next(errorHandler(404, 'Course not found'));
+  const course = await Course.findById(req.params.id);
+  if(!course) return next(errorHandler(404, 'Course not found'));
 
-    const courseUpdated = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    return res.status(200).json(courseUpdated);
+  const userIdObjectId = new ObjectId(req.auth.userId);
+  const createdByArray = course.createdBy;
+  const isUserIdInCreatedBy = createdByArray.some(createdById => userIdObjectId.equals(createdById));
+  
+  if(isUserIdInCreatedBy || req.auth.role === ROLES.ADMIN) {
+    try {
+  
+      const courseUpdated = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      return res.status(200).json(courseUpdated);
+  
+    } catch (err) {
+      next(err);
+    }
 
-  } catch (err) {
-    next(err);
+  } else {
+    return next(errorHandler(403, 'You are not authorized to modify this course'));
   }
+  
 };
 
 
