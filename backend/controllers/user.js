@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 // const { matchedData } = require('express-validator');
 const errorHandler = require('../utils/errorHandler');
+const Course = require('../models/Course');
 
 /**
  * Retrieves all users from the database and sends a JSON response with the users.
@@ -59,6 +60,19 @@ exports.getOneUser = async (req, res, next) => {
   }
 }
 
+exports.getUserCourses = async (req, res, next) => {
+  if(req.auth.userId === req.params.id) {
+    try {
+      const courses = await Course.find({ createdBy: req.params.id });
+      res.json({ courses });
+      
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    return next(errorHandler(401, 'You are not authorized to view this user\'s courses'));
+  }
+}
 
 exports.modifyUser = async (req, res, next) => {
   if(req.auth.userId !== req.params.id) return next(errorHandler(401, 'unauthorized'));
