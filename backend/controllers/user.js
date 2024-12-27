@@ -78,7 +78,7 @@ exports.modifyUser = async (req, res, next) => {
       }
     } , { new: true });
 
-    const { password, role, ...rest } = updatedUser._doc;
+    const { password, ...rest } = updatedUser._doc;
 
     return res.json(rest);
     

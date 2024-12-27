@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase'
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -23,11 +24,12 @@ export default function CreateCourse() {
     isFree: false,
     level: "Beginner",
     domain: "",
-    duration: 0,
+    duration: 1,
     sections: [],
   });
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   console.log(courseData.imageUrl);
 
@@ -187,6 +189,7 @@ export default function CreateCourse() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if(courseData.imageUrl.length === 0) return setError("Please add an image for the course");
       setLoading(true);
       setError(false);
       const res = await fetch(`${API_URL}/api/courses/create`, {
@@ -206,6 +209,7 @@ export default function CreateCourse() {
         alert("Erreur lors de la création du cours");
       }
       
+      navigate(`/${data.course._id}/info`);
 
     } catch (error) {
       setError(error.message);
@@ -513,7 +517,7 @@ export default function CreateCourse() {
         </div>
 
         {/* Soumission du formulaire */}
-        <button type="submit" className="bg-green-600 text-white px-6 py-3 rounded-lg mt-8">
+        <button disabled={loading || uploading} type="submit" className="bg-green-600 text-white px-6 py-3 rounded-lg mt-8 hover:opacity-90 disabled:opacity-80">
           {loading ? 'enregistrement...' : 'Créer le cours'}
         </button>
         {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
