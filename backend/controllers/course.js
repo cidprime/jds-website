@@ -17,25 +17,16 @@ const { ObjectId } = require('mongodb');
  * @returns {Promise<void>} - A promise that resolves once the operation is complete.
  */
 exports.getAllCourses = async (req, res, next) => {
-  const { theme } = req.query;
+  const { domain } = req.query;
 
   try {
     let courses;
 
-    if(theme) {
-      courses = await Course.find({ theme })
-        .select('-sections')
-        .populate({
-          path: 'createdBy', select: 'firstname lastname'
-        });
-  
-    } else {
-      courses = await Course.find()
-        .select('-sections')
-        .populate({
-          path: 'createdBy', select: 'firstname lastname'
-        });
-    }
+    courses = await Course.find()
+      .select('-sections')
+      .populate({
+        path: 'createdBy', select: 'firstname lastname'
+      });
 
     return res.json(courses);
 
@@ -44,6 +35,33 @@ exports.getAllCourses = async (req, res, next) => {
   }
 
 };
+
+exports.searchCourses = async (req, res, next) => {
+  const {domain, title, limit, startIndex, sort} = req.query;
+
+  try {
+    const limitCourses = limit ? parseInt(limit) : 10;
+    const startIndexCourses = startIndex ? parseInt(startIndex) : 0;
+    const sortCourses = sort ? sort : 'createdAt';
+
+    const courses = await Course.find({ 
+      domain: { $regex: new RegExp(domain, 'i') },
+      title: { $regex: new RegExp(title, 'i') },
+    })
+      .sort({ [sortCourses]: -1 })
+      .limit(limitCourses)
+      .skip(startIndexCourses)
+      .select('-sections')
+      .populate({
+        path: 'createdBy', select: 'firstname lastname'
+      });
+    
+    return res.json(courses);
+
+  } catch (error) {
+    next(error);
+  }
+}
 
 
 /**
@@ -107,6 +125,27 @@ exports.getCourseInfo = async (req, res, next) => {
 
   } catch(err) {
     next(err);
+  }
+};
+
+exports.getCourseById = async (req, res, next) => {
+
+  const course = await Course.findById(req.params.id)
+  if (!course) return next(errorHandler(404, 'Course not found'));
+  
+  const userIdObjectId = new ObjectId(req.auth.userId);
+  const createdByArray = course.createdBy;
+  const isUserIdInCreatedBy = createdByArray.some(createdById => userIdObjectId.equals(createdById));
+
+  if (isUserIdInCreatedBy || req.auth.role === ROLES.ADMIN) {
+    try {
+      res.json(course);
+
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    return next(errorHandler(403, 'You are not authorized to view this course'));
   }
 };
 

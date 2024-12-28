@@ -15,6 +15,8 @@ import CourseContent from './pages/CourseContent'
 import Quiz from './pages/Quiz'
 import Footer from './components/Footer'
 import Dashboard from './pages/Dashboard'
+import UpdateCourse from './pages/UpdateCourse'
+import Contact from './pages/Contact'
 
 export default function App() {
   return (
@@ -25,6 +27,7 @@ export default function App() {
         <Route path='/:id/info' element={<CourseInfo />} />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />
+        <Route path='/contact' element={<Contact />} />
         <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
           <Route path='/:id/course-content' element={<CourseContent />} />
@@ -33,6 +36,7 @@ export default function App() {
         </Route>
         <Route element={<AuthorizedPrivateRoute />}>
           <Route path='/create-course' element={<CreateCourse />} />
+          <Route path='/update-course/:id' element={<UpdateCourse />} />
           <Route path='/create-sections' element={<CreateSections />} />
         </Route>
         <Route path='/about' element={<About />} />

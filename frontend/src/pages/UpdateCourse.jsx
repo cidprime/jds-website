@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase'
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function CreateCourse() {
+export default function UpdateCourse() {
   const { currentUser } = useSelector((state) => state.user);
   const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState(undefined);
@@ -30,6 +30,7 @@ export default function CreateCourse() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const params = useParams();
 
   // Gestion des changements dans les champs de base du cours
   const handleChange = (e) => {
@@ -183,6 +184,23 @@ export default function CreateCourse() {
     setCourseData({ ...courseData, sections });
   };
 
+  useEffect(() => {
+    const fetchCourse = async () => {
+      const courseId = params.id;
+      const res = await fetch(`/api/courses/get/${courseId}`);
+      const data = await res.json();
+
+      if(data.success === false) {
+        console.log(data.message);
+        return;
+      }
+      console.log(data);
+      // setCourseData(data);
+    };
+
+    fetchCourse();
+  }, []);
+
   // Envoi du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -218,7 +236,7 @@ export default function CreateCourse() {
 
   return (
     <div className="max-w-5xl mx-auto py-10 px-5 my-8 bg-white rounded-lg">
-      <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">Créer un nouveau cours</h1>
+      <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">modifier le cours</h1>
       <form onSubmit={handleSubmit}>
         {/* Informations de base du cours */}
         <div className="mb-6">
@@ -516,7 +534,7 @@ export default function CreateCourse() {
 
         {/* Soumission du formulaire */}
         <button disabled={loading || uploading} type="submit" className="bg-green-600 text-white px-6 py-3 rounded-lg mt-8 hover:opacity-90 disabled:opacity-80">
-          {loading ? 'enregistrement...' : 'Créer le cours'}
+          {loading ? 'enregistrement...' : 'modifier le cours'}
         </button>
         {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
       </form>
