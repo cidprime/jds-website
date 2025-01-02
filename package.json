@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node backend/server",
     "dev": "nodemon backend/server",
-    "build:frontend": "cd frontend && npm run build",
-    "start:frontend": "cd frontend && npm start"
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "A.Sidiki OUEDRAOGO",
   "license": "ISC",
