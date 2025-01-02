@@ -16,6 +16,5 @@ router.get('/:id/info', courseCtrl.getCourseInfo);
 router.get('/:id/content', verifyToken, courseCtrl.getCourseContent); // if is not free pay before
 router.get('/get/:id', verifyToken, courseCtrl.getCourseById);
 
-router.get('/search', courseCtrl.searchCourses); // search by domain or title
 
 module.exports = router;

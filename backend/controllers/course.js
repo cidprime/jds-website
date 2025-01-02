@@ -17,51 +17,37 @@ const { ObjectId } = require('mongodb');
  * @returns {Promise<void>} - A promise that resolves once the operation is complete.
  */
 exports.getAllCourses = async (req, res, next) => {
-  const { domain } = req.query;
+  const { query, categories, limit, startIndex } = req.query;
 
   try {
-    let courses;
+    const filter = {};
 
-    courses = await Course.find()
-      .select('-sections')
-      .populate({
-        path: 'createdBy', select: 'firstname lastname'
-      });
+    if (query) filter.title = { $regex: new RegExp(query, 'i') };
 
-    return res.json(courses);
+    if (categories) filter.domain = { $regex: new RegExp(categories, 'i') };
 
-  } catch(err) {
-    next(err);
-  }
-
-};
-
-exports.searchCourses = async (req, res, next) => {
-  const {domain, title, limit, startIndex, sort} = req.query;
-
-  try {
     const limitCourses = limit ? parseInt(limit) : 10;
     const startIndexCourses = startIndex ? parseInt(startIndex) : 0;
-    const sortCourses = sort ? sort : 'createdAt';
 
-    const courses = await Course.find({ 
-      domain: { $regex: new RegExp(domain, 'i') },
-      title: { $regex: new RegExp(title, 'i') },
-    })
-      .sort({ [sortCourses]: -1 })
+    const courses = await Course.find(filter)
       .limit(limitCourses)
       .skip(startIndexCourses)
       .select('-sections')
       .populate({
         path: 'createdBy', select: 'firstname lastname'
       });
-    
-    return res.json(courses);
 
-  } catch (error) {
-    next(error);
+    // total number of courses in the database
+    const totalCourses = await Course.countDocuments(filter);
+        
+    if (!courses) return next(errorHandler(404, 'No courses found'));
+
+    return res.json({courses, totalCourses});
+
+  } catch (err) {
+    next(err);
   }
-}
+};
 
 
 /**

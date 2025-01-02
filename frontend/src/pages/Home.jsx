@@ -1,19 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { FaSignal, FaClock } from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
+import { FaSignal, FaClock, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Home() {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCourses, setTotalCourses] = useState(0);
+  const coursesPerPage = 10;
+  const location = useLocation();
+  const totalPages = Math.ceil(totalCourses / coursesPerPage);
 
   useEffect(() => {
-    // Récupération des cours via l'API
-    fetch(`${API_URL}/api/courses`)
+    const urlParams = new URLSearchParams(location.search);
+    const queryFromUrl = urlParams.get('query');
+    console.log(location.search);
+
+    setLoading(true);
+    const startIndex = (currentPage - 1) * coursesPerPage;
+
+    const fetchUrl = queryFromUrl 
+      ? `${API_URL}/api/courses/?query=${queryFromUrl}&limit=${coursesPerPage}&startIndex=${startIndex}` 
+      : `${API_URL}/api/courses/?limit=${coursesPerPage}&startIndex=${startIndex}`;
+      
+    fetch(fetchUrl)
       .then((response) => response.json())
-      .then((data) => setCourses(data))
+      .then((data) => {
+        setCourses(data.courses); 
+        setTotalCourses(data.totalCourses);
+        setLoading(false);
+      })
       .catch((error) => console.error("Erreur lors de la récupération des cours :", error));
-  }, []);
+  
+  }, [location.search, currentPage]);
 
   return (
     <div className="bg-gray-50 min-h-screen py-5 px-5">
@@ -71,6 +92,43 @@ export default function Home() {
               </div>
             </Link>
           ))}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex items-center justify-center mt-8 space-x-2">
+          {/* Bouton Précédent */}
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className={`w-10 h-12 flex items-center justify-center rounded-md ${
+              currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-700'
+            }`}>
+            <FaChevronLeft />
+          </button>
+
+          {/* Numéros des pages */}
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`w-10 h-10 flex items-center justify-center rounded-md ${
+                page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-300 hover:bg-blue-700 hover:text-white'
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          {/* Bouton Suivant */}
+          <button
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            disabled={currentPage >= totalPages}
+            className={`w-10 h-12 flex items-center justify-center rounded-md ${
+              currentPage >= totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-700'
+            }`}
+          >
+            <FaChevronRight />
+          </button>
         </div>
       </div>
     </div>

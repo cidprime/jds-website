@@ -11,23 +11,24 @@ export default function Header() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set('domain', search);
+    urlParams.set('query', search);
+    urlParams.set('page', 1);
     const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
+    navigate(`/?${searchQuery}`);
   }
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
-    const domainFromUrl = urlParams.get('domain');
-    if(domainFromUrl) {
-      setSearch(domainFromUrl);
+    const queryFromUrl = urlParams.get('query');
+    if(queryFromUrl) {
+      setSearch(queryFromUrl);
     }
   }, [location.search]);
 
   return (
     <header className='bg-white shadow-md'>
       <div className='flex justify-between items-center max-w-6xl mx-auto p-2'>
-        <Link to={'/'}>
+        <Link to={'/'} className='cursor-pointer'>
           <h1 className='font-bold text-sm sm:text-lg flex flex-wrap'>
             <span className='text-blue-900'>JED</span>
             <span className='text-yellow-500'>DIGITAL</span>
