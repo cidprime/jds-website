@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaSignal, FaClock, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -11,12 +11,12 @@ export default function Home() {
   const [totalCourses, setTotalCourses] = useState(0);
   const coursesPerPage = 10;
   const location = useLocation();
+  const navigate = useNavigate();
   const totalPages = Math.ceil(totalCourses / coursesPerPage);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const queryFromUrl = urlParams.get('query');
-    console.log(location.search);
 
     setLoading(true);
     const startIndex = (currentPage - 1) * coursesPerPage;
@@ -35,6 +35,18 @@ export default function Home() {
       .catch((error) => console.error("Erreur lors de la récupération des cours :", error));
   
   }, [location.search, currentPage]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const pageFromUrl = parseInt(urlParams.get('page')) || 1;
+    setCurrentPage(pageFromUrl);
+  }, [location.search]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set('page', currentPage);
+    navigate(`?${urlParams.toString()}`, { replace: true });
+  }, [currentPage]);
 
   return (
     <div className="bg-gray-50 min-h-screen py-5 px-5">
