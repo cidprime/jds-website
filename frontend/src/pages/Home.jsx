@@ -107,41 +107,43 @@ export default function Home() {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-center mt-8 space-x-2">
-          {/* Bouton Précédent */}
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className={`w-10 h-12 flex items-center justify-center rounded-md ${
-              currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-700'
-            }`}>
-            <FaChevronLeft />
-          </button>
-
-          {/* Numéros des pages */}
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+        {courses && totalPages > 1 && 
+          <div className="flex items-center justify-center mt-8 space-x-2">
+            {/* Bouton Précédent */}
             <button
-              key={page}
-              onClick={() => setCurrentPage(page)}
-              className={`w-10 h-10 flex items-center justify-center rounded-md ${
-                page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-300 hover:bg-blue-700 hover:text-white'
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className={`w-10 h-12 flex items-center justify-center rounded-md ${
+                currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-700'
+              }`}>
+              <FaChevronLeft />
+            </button>
+
+            {/* Numéros des pages */}
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`w-10 h-10 flex items-center justify-center rounded-md ${
+                  page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-300 hover:bg-blue-700 hover:text-white'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+
+            {/* Bouton Suivant */}
+            <button
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              disabled={currentPage >= totalPages}
+              className={`w-10 h-12 flex items-center justify-center rounded-md ${
+                currentPage >= totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-700'
               }`}
             >
-              {page}
+              <FaChevronRight />
             </button>
-          ))}
-
-          {/* Bouton Suivant */}
-          <button
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            disabled={currentPage >= totalPages}
-            className={`w-10 h-12 flex items-center justify-center rounded-md ${
-              currentPage >= totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-700'
-            }`}
-          >
-            <FaChevronRight />
-          </button>
-        </div>
+          </div>
+        }
       </div>
     </div>
   );
