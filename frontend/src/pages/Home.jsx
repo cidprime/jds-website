@@ -58,23 +58,26 @@ export default function Home() {
             <Link to={`/${course._id}/info`} key={course._id} className="block">
               <div className="flex bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 p-2">
                 
-                <div className="max-w-64 max-h-40 object-cover">
+                <div className="w-1/3 max-w-64 max-h-40 object-cover">
                   <img className="object-cover w-44 h-auto sm:w-64 sm:h-40"
                     src={course.imageUrl}
                     alt={course.title}
                   />
                 </div>
                 
-                <div className="px-4 w-auto flex flex-col">
+                <div className="w-2/3 px-4 flex flex-col">
 
                   <div>
-                    <span className="text-xs sm:text-sm text-blue-700 uppercase font-semibold">{course.domain} - Cours</span>
-                    <h2 className="text-sm sm:text-xl font-bold text-black">{course.title}</h2>
+                    <div className="flex flex-row text-xs sm:text-sm text-blue-700 uppercase font-semibold gap-1">
+                      <span> {course.domain} </span>
+                      <span className="hidden sm:block"> - Cours</span>
+                    </div>
+                    <h2 className="text-sm sm:text-xl font-bold text-black truncate">{course.title}</h2>
                   </div>
                   
                   <div className="mt-1 flex items-center gap-2">
 
-                    <div className="flex items-center gap-2 text-sm sm:text-base">
+                    <div className="flex items-center gap-2 text-xs sm:text-base">
                       <FaSignal title="Niveau"/>
                       <span>{course.level}</span>
                     </div>

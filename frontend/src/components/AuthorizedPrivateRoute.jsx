@@ -1,7 +1,6 @@
-import { useSelector } from "react-redux"
-import { Navigate, Outlet } from "react-router-dom";
+import React from 'react'
 
-export default function PrivateRoute() {
+export default function AuthorizedPrivateRoute() {
   const { currentUser } = useSelector((state) => state.user);
 
   const isAuthorized = currentUser && currentUser.role !== 4181;

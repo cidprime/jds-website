@@ -7,18 +7,27 @@ import Profile from './pages/Profile'
 import About from './pages/About'
 import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
-import AuthorizedPrivateRoute from './components/AuthorizedPrivateRoute'
+import ProtectedRoute from './components/ProtectedRoute'
 import CreateCourse from './pages/CreateCourse'
 import CreateSections from './pages/CreateSections'
 import CourseInfo from './pages/CourseInfo'
 import CourseContent from './pages/CourseContent'
 import Quiz from './pages/Quiz'
 import Footer from './components/Footer'
-import Dashboard from './pages/Dashboard'
 import UpdateCourse from './pages/UpdateCourse'
 import Contact from './pages/Contact'
+import DashboardAdmin from './views/admin/DashboardAdmin'
+import DashboardSuperUser from './views/superuser/DashboardSuperUser'
+import DashboardUser from './views/user/DashboardUser'
+import { useSelector } from 'react-redux'
+import AuthorizedPrivateRoute from './components/AuthorizedPrivateRoute'
+import Overview from './views/admin/Overview'
+import Users from './views/admin/Users'
+import Courses from './views/admin/Courses'
 
 export default function App() {
+  const { currentUser } = useSelector((state) => state.user);
+
   return (
     <BrowserRouter>
       <Header/>
@@ -28,18 +37,39 @@ export default function App() {
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/contact' element={<Contact />} />
+        <Route path='/about' element={<About />} />
         <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
           <Route path='/:id/course-content' element={<CourseContent />} />
           <Route path='/quiz/:id' element={<Quiz />} />
-          <Route path='/dashboard' element={<Dashboard />} />
         </Route>
+
+        <Route path='/admin/dashboard' element={
+            <ProtectedRoute allowedRoles={[2584]}>
+              <DashboardAdmin />  
+            </ProtectedRoute>
+          }>
+            <Route path='/admin/dashboard/overview' element={<Overview />} />
+            <Route path='/admin/dashboard/users' element={<Users />} />
+            <Route path='/admin/dashboard/manageCourses' element={<Courses />} />
+        </Route>
+
+        <Route path='/superUser/dashboard' element={
+          <ProtectedRoute allowedRoles={[4987]}>
+            <DashboardSuperUser />  
+          </ProtectedRoute>
+        } />
+
+        <Route path='/user/dashboard' element={
+          <ProtectedRoute allowedRoles={[4181]}>
+            <DashboardUser />  
+          </ProtectedRoute>
+        } />
+
         <Route element={<AuthorizedPrivateRoute />}>
           <Route path='/create-course' element={<CreateCourse />} />
           <Route path='/update-course/:id' element={<UpdateCourse />} />
-          <Route path='/create-sections' element={<CreateSections />} />
         </Route>
-        <Route path='/about' element={<About />} />
       </Routes>
       <Footer/>
     </BrowserRouter>
