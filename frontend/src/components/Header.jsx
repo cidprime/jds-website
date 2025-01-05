@@ -7,6 +7,7 @@ export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  console.log(currentUser?.role);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,7 +30,7 @@ export default function Header() {
     <header className='bg-white shadow-md'>
       <div className='flex justify-between items-center max-w-6xl mx-auto p-2'>
         <Link to={'/'} className='cursor-pointer'>
-          <h1 className='font-bold text-sm sm:text-lg flex flex-wrap'>
+          <h1 className='font-bold text-xs sm:text-lg flex flex-wrap'>
             <span className='text-blue-900'>JED</span>
             <span className='text-yellow-500'>DIGITAL</span>
             <span className='text-blue-900'>SOLUTIONS</span>
@@ -55,7 +56,13 @@ export default function Header() {
               About
             </li>
           </Link>
-          <Link to={'/dashboard'}>
+          <Link to={currentUser?.role === 2584 
+              ? '/admin/dashboard/overview' 
+              : currentUser?.role === 4987 
+                ? '/superUser/dashboard/overview'
+                : currentUser?.role === 4181
+                  ? '/user/dashboard/overview'
+                  : '/sign-in'}>
             {
               currentUser ? (<img className='rounded-full h-7 w-7 object-cover' src={currentUser.avatar} alt="profile" />)
                           : (<li className='text-slate-700 hover:underline'>

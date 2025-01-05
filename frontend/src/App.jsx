@@ -22,8 +22,9 @@ import DashboardUser from './views/user/DashboardUser'
 import { useSelector } from 'react-redux'
 import AuthorizedPrivateRoute from './components/AuthorizedPrivateRoute'
 import Overview from './views/admin/Overview'
-import Users from './views/admin/Users'
-import Courses from './views/admin/Courses'
+import ManageUsers from './views/admin/ManageUsers'
+import ManageCourses from './views/admin/ManageCourses'
+import Analytics from './views/admin/Analytics'
 
 export default function App() {
   const { currentUser } = useSelector((state) => state.user);
@@ -50,8 +51,9 @@ export default function App() {
             </ProtectedRoute>
           }>
             <Route path='/admin/dashboard/overview' element={<Overview />} />
-            <Route path='/admin/dashboard/users' element={<Users />} />
-            <Route path='/admin/dashboard/manageCourses' element={<Courses />} />
+            <Route path='/admin/dashboard/manage-users' element={<ManageUsers />} />
+            <Route path='/admin/dashboard/manage-courses' element={<ManageCourses />} />
+            <Route path='/admin/dashboard/analytics' element={<Analytics />} />
         </Route>
 
         <Route path='/superUser/dashboard' element={
