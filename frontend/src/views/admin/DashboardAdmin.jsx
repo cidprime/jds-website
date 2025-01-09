@@ -7,7 +7,7 @@ export default function DashboardAdmin() {
       {/* Sidebar */}
       <Sidebar role={2584} />
       {/* Main content */}
-      <main className="flex-1 p-6 bg-gray-100">
+      <main className="flex-1 p-6 bg-gray-100 overflow-y-scroll">
         <Outlet />
       </main>
     </div>

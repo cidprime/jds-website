@@ -21,7 +21,7 @@ export default function EnrollmentOverviewChart() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
+      transition={{ delay: 0.3 }}
       className="bg-white backdrop-blur-md p-6 shadow-lg rounded-xl border border-black-100"
     >
       <h2 className="text-lg font-medium mb-4 text-black"
