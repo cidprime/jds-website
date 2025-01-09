@@ -25,55 +25,55 @@ import Overview from './views/admin/Overview'
 import ManageUsers from './views/admin/ManageUsers'
 import ManageCourses from './views/admin/ManageCourses'
 import Analytics from './views/admin/Analytics'
+import Layout from './pages/Layout'
 
 export default function App() {
-  const { currentUser } = useSelector((state) => state.user);
 
   return (
     <BrowserRouter>
-      <Header/>
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/:id/info' element={<CourseInfo />} />
-        <Route path='/sign-in' element={<SignIn />} />
-        <Route path='/sign-up' element={<SignUp />} />
-        <Route path='/contact' element={<Contact />} />
-        <Route path='/about' element={<About />} />
-        <Route element={<PrivateRoute />}>
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/:id/course-content' element={<CourseContent />} />
-          <Route path='/quiz/:id' element={<Quiz />} />
-        </Route>
+        <Route path='/' element={<Layout />}>
+          <Route path='/' element={<Home />} />
+          <Route path='/:id/info' element={<CourseInfo />} />
+          <Route path='/sign-in' element={<SignIn />} />
+          <Route path='/sign-up' element={<SignUp />} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='/about' element={<About />} />
+          <Route element={<PrivateRoute />}>
+            <Route path='/profile' element={<Profile />} />
+            <Route path='/:id/course-content' element={<CourseContent />} />
+            <Route path='/quiz/:id' element={<Quiz />} />
+          </Route>
 
-        <Route path='/admin/dashboard' element={
-            <ProtectedRoute allowedRoles={[2584]}>
-              <DashboardAdmin />  
+          <Route path='/admin/dashboard' element={
+              <ProtectedRoute allowedRoles={[2584]}>
+                <DashboardAdmin />  
+              </ProtectedRoute>
+            }>
+              <Route path='/admin/dashboard/overview' element={<Overview />} />
+              <Route path='/admin/dashboard/manage-users' element={<ManageUsers />} />
+              <Route path='/admin/dashboard/manage-courses' element={<ManageCourses />} />
+              <Route path='/admin/dashboard/analytics' element={<Analytics />} />
+          </Route>
+
+          <Route path='/superUser/dashboard' element={
+            <ProtectedRoute allowedRoles={[4987]}>
+              <DashboardSuperUser />  
             </ProtectedRoute>
-          }>
-            <Route path='/admin/dashboard/overview' element={<Overview />} />
-            <Route path='/admin/dashboard/manage-users' element={<ManageUsers />} />
-            <Route path='/admin/dashboard/manage-courses' element={<ManageCourses />} />
-            <Route path='/admin/dashboard/analytics' element={<Analytics />} />
-        </Route>
+          } />
 
-        <Route path='/superUser/dashboard' element={
-          <ProtectedRoute allowedRoles={[4987]}>
-            <DashboardSuperUser />  
-          </ProtectedRoute>
-        } />
+          <Route path='/user/dashboard' element={
+            <ProtectedRoute allowedRoles={[4181]}>
+              <DashboardUser />  
+            </ProtectedRoute>
+          } />
 
-        <Route path='/user/dashboard' element={
-          <ProtectedRoute allowedRoles={[4181]}>
-            <DashboardUser />  
-          </ProtectedRoute>
-        } />
-
-        <Route element={<AuthorizedPrivateRoute />}>
-          <Route path='/create-course' element={<CreateCourse />} />
-          <Route path='/update-course/:id' element={<UpdateCourse />} />
+          <Route element={<AuthorizedPrivateRoute />}>
+            <Route path='/create-course' element={<CreateCourse />} />
+            <Route path='/update-course/:id' element={<UpdateCourse />} />
+          </Route>
         </Route>
       </Routes>
-      <Footer/>
     </BrowserRouter>
   )
 }
