@@ -93,7 +93,7 @@ export default function Home() {
                       <div className="flex items-center gap-2 text-sm sm:text-base">
                         <span className="text-gray-500">Prix :</span>
                         <span className="text-green-600">
-                          {course.isFree ? "Free" : `${course.price} XOF`}
+                          {course.isFree ? "Free" : `${course.price} FCFA`}
                         </span>
                       </div>
                     </div>

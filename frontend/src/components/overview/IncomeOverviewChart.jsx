@@ -32,7 +32,7 @@ export default function IncomeOverviewChart() {
           <LineChart data={IncomeData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
               <XAxis dataKey={"namex"} />
-              <YAxis stroke="#9Ca3af" />
+              <YAxis stroke="#9Ca3af" domain={[0, 150000]} tickCount={5000}/>
               <Tooltip
                 contentStyle={{
                   backgroundColor: "rgba(31, 41, 55, 0.8)",

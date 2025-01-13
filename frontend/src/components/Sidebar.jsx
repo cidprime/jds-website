@@ -9,8 +9,8 @@ export default function Sidebar({ role }) {
   const links = {
     2584: [
       { path: "/admin/dashboard/overview", label: "Aperçu", icon: BarChart2, color: "#6355f1" },
-      { path: "/admin/dashboard/manage-users", label: "Gérer les utilisateurs", icon: Users, color: "#EC4899" },
       { path: "/admin/dashboard/manage-courses", label: "Gérer les cours", icon: Library, color: "#10B981" },
+      { path: "/admin/dashboard/manage-users", label: "Gérer les utilisateurs", icon: Users, color: "#EC4899" },
       { path: "/admin/dashboard/analytics", label: "Analytique", icon: TrendingUp, color: "#3B82F6" },
       { path: "/profile", label: "Profile", icon: UserPen, color: "#F59E0B" },
     ],

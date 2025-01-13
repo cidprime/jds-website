@@ -2,18 +2,18 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { motion } from "framer-motion"
 
 const EnrollmentData = [
-  {namex: "juil", inscription: "10"},
-  {namex: "Août", inscription: "23"},
+  {namex: "juil", inscription: "24"},
+  {namex: "Août", inscription: "43"},
   {namex: "Sept", inscription: "48"},
-  {namex: "Oct", inscription: "100"},
+  {namex: "Oct", inscription: "173"},
   {namex: "Nov", inscription: "83"},
   {namex: "Déc", inscription: "29"},
-  {namex: "Janv", inscription: "33"},
+  {namex: "Janv", inscription: "53"},
   {namex: "Févr", inscription: "54"},
   {namex: "Mars", inscription: "59"},
-  {namex: "Avr", inscription: "62"},
-  {namex: "Mai", inscription: "48"},
-  {namex: "Juin", inscription: "48"}
+  {namex: "Avr", inscription: "92"},
+  {namex: "Mai", inscription: "88"},
+  {namex: "Juin", inscription: "78"}
 ]
 export default function EnrollmentOverviewChart() {
 
@@ -42,7 +42,7 @@ export default function EnrollmentOverviewChart() {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="namex" />
-            <YAxis />
+            <YAxis domain={[0, 200]} tickCount={10} />
             <Tooltip />
             <Area type="monotone" dataKey="inscription" stroke="#8884d8" fill="#8884d8" />
           </AreaChart>
