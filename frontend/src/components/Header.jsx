@@ -6,8 +6,7 @@ import { useEffect, useState } from 'react';
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const [search, setSearch] = useState('');
-  const navigate = useNavigate();
-  console.log(currentUser?.role);
+  const navigate = useNavigate();;
 
   const handleSubmit = (e) => {
     e.preventDefault();

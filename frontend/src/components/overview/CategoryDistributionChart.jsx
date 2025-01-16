@@ -1,4 +1,4 @@
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
 
 const categoryData = [
@@ -21,7 +21,7 @@ export default function CategoryDistributionChart({ColSpan2}) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className={`bg-white backdrop-blur-md p-6 shadow-lg rounded-xl border border-black-100 ${ColSpan2 ? 'lg:col-span-2' : ''}`}
+      className={`bg-white backdrop-blur-md p-6 shadow-lg rounded-xl border border-black-100 ${ColSpan2 && 'lg:col-span-2'}`}
     >
       <h2 className="text-lg font-medium mb-4 text-black">
         Répartition des cours par catégories

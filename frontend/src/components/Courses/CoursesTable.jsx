@@ -78,7 +78,7 @@ export default function CoursesTable() {
                     {course?.domain}
                   </td>
                   <td className={`px-6 py-4 whitespace-nowrap text-sm text-black-400 ${course?.isFree && 'text-green-700'}`}>
-                    {course?.isFree ? 'Free' : course?.price}
+                    {course?.isFree ? 'Free' : course?.price.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-xs text-black-400 uppercase">
                     {22}

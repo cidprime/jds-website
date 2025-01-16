@@ -29,7 +29,7 @@ export default function Sidebar({ role }) {
 
   return (
     <motion.aside 
-      className={`bg-gray-800 text-white relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 rounded-tr-lg rounded-br-lg ${ isSidebarOpen ? 'w-1/5' : 'w-16' }`}
+      className={`bg-gray-800 text-white relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${ isSidebarOpen ? 'w-1/5' : 'w-16' }`}
       animate={{ width: isSidebarOpen ? 256 : 80 }}
       >
       
