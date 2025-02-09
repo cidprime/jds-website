@@ -39,7 +39,7 @@ export default function UserGrowthChart() {
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey={"month"} stroke="#9CA3AF" />
-                <YAxis stroke="#9CA3AF" domain={[0, 7000]} tickCount={1000} />
+                <YAxis stroke="#9CA3AF" domain={[0, 7000]} tickCount={12} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "rgba(31, 41, 55, 0.8)",

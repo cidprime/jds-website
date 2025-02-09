@@ -33,7 +33,7 @@ export default function ManageUsers() {
           transition={{ duration: 1 }}
         >
           <StatCard name="Cours en ligne" icon={Upload} value={totalCourses} color="#f35b04" />
-          <StatCard name="Revenu total" icon={PiggyBank} value={"12.000 FCFA"} color="#10B981" />
+          <StatCard name="Revenu total" icon={PiggyBank} value={"12.000 CFA"} color="#10B981" />
           <StatCard name="top tendance" icon={TrendingUp} value={8} color="#885CF6" />
           <StatCard name="Cours peu suivis" icon={AlertTriangle} value={3} color="#ef233c" />
         </motion.div>

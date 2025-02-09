@@ -32,7 +32,7 @@ export default function Overview() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          <StatCard name="Revenu total" icon={Zap} value="12.000 FCFA" color="#6366F1" />
+          <StatCard name="Revenu total" icon={Zap} value="12.000 CFA" color="#6366F1" />
           <StatCard name="Nouveaux utilisateurs" icon={Users} value="12" color="#885CF6" />
           <StatCard name="Cours en ligne" icon={Upload} value={totalCourses} color="#EC4899" />
           <StatCard name="Taux de conversion" icon={BarChart2} value="12%" color="#10B981" />
