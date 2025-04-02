@@ -60,7 +60,7 @@ export default function Header() {
               : currentUser?.role === 4987 
                 ? '/superUser/dashboard/overview'
                 : currentUser?.role === 4181
-                  ? '/user/dashboard/overview'
+                  ? '/user/dashboard/profile'
                   : '/sign-in'}>
             {
               currentUser ? (<img className='rounded-full h-7 w-7 object-cover' src={currentUser.avatar} alt="profile" />)

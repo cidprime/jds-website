@@ -54,6 +54,7 @@ export default function App() {
               <Route path='/admin/dashboard/manage-users' element={<ManageUsers />} />
               <Route path='/admin/dashboard/manage-courses' element={<ManageCourses />} />
               <Route path='/admin/dashboard/analytics' element={<Analytics />} />
+              <Route path='/admin/dashboard/profile' element={<Profile />} />
           </Route>
 
           <Route path='/superUser/dashboard' element={

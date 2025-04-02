@@ -28,7 +28,7 @@ export default function OverviewCards() {
               </p>
             </div>
             <div className={`p-3 rounded-full bg-opacity-20 ${item?.change >= 0 ? 'bg-green-600' : 'bg-red-600 '}`}>
-              <item.icon className={`size-6 ${item?.change >= 0 ? 'text-green-600' : 'text-red-600'}`} />
+              <item.icon className={`size-4 ${item?.change >= 0 ? 'text-green-600' : 'text-red-600'}`} />
             </div>
           </div>
           <div className={`mt-4 flex items-center ${item?.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>

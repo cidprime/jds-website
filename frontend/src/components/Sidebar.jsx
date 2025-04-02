@@ -12,18 +12,18 @@ export default function Sidebar({ role }) {
       { path: "/admin/dashboard/manage-courses", label: "Gérer les cours", icon: Library, color: "#10B981" },
       { path: "/admin/dashboard/manage-users", label: "Gérer les utilisateurs", icon: Users, color: "#EC4899" },
       { path: "/admin/dashboard/analytics", label: "Analytique", icon: TrendingUp, color: "#3B82F6" },
-      { path: "/profile", label: "Profile", icon: UserPen, color: "#F59E0B" },
+      { path: "/admin/dashboard/profile", label: "Profile", icon: UserPen, color: "#F59E0B" },
     ],
     4987: [
       { path: "/superUser/dashboard/overview", label: "Aperçu", icon: BarChart2, color: "#6355f1" },
       { path: "/superUser/dashboard/my-courses", label: "Mes cours", icon: BarChart2, color: "#6355f1" },
       { path: "/superUser/dashboard/students", label: "Students", icon: BarChart2, color: "#6355f1" },
-      { path: "/profile", label: "Profile", icon: UserPen, color: "#F59E0B" },
+      { path: "/superUser/dashboard/profile", label: "Profile", icon: UserPen, color: "#F59E0B" },
     ],
     4181: [
       { path: "/user/dashboard/overview", label: "Aperçu", icon: BarChart2, color: "#6355f1" },
       { path: "/user/dashboard/courses-taken", label: "Cours suivis", icon: BarChart2, color: "#6355f1" },
-      { path: "/profile", label: "Profile", icon: UserPen, color: "#F59E0B" },
+      { path: "user/dashboard/profile", label: "Profile", icon: UserPen, color: "#F59E0B" },
     ],
   };
 
