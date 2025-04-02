@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BarChart2, Library, Menu, TrendingUp, UserPen, Users } from "lucide-react"
+import { BarChart2, Book, BookOpenText, GraduationCap, Library, Menu, TrendingUp, UserPen, Users } from "lucide-react"
 import { useState } from "react";
 import { AnimatePresence, color, motion } from "framer-motion";
 
@@ -16,13 +16,13 @@ export default function Sidebar({ role }) {
     ],
     4987: [
       { path: "/superUser/dashboard/overview", label: "Aperçu", icon: BarChart2, color: "#6355f1" },
-      { path: "/superUser/dashboard/my-courses", label: "Mes cours", icon: BarChart2, color: "#6355f1" },
-      { path: "/superUser/dashboard/students", label: "Students", icon: BarChart2, color: "#6355f1" },
+      { path: "/superUser/dashboard/my-courses", label: "Mes cours", icon: Library, color: "#10B981" },
+      { path: "/superUser/dashboard/students", label: "Students", icon: GraduationCap, color: "#EC4899" },
       { path: "/superUser/dashboard/profile", label: "Profile", icon: UserPen, color: "#F59E0B" },
     ],
     4181: [
       { path: "/user/dashboard/overview", label: "Aperçu", icon: BarChart2, color: "#6355f1" },
-      { path: "/user/dashboard/courses-taken", label: "Cours suivis", icon: BarChart2, color: "#6355f1" },
+      { path: "/user/dashboard/courses-taken", label: "Cours suivis", icon: BookOpenText, color: "#6355f1" },
       { path: "user/dashboard/profile", label: "Profile", icon: UserPen, color: "#F59E0B" },
     ],
   };

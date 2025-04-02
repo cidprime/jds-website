@@ -26,6 +26,11 @@ import ManageUsers from './views/admin/ManageUsers'
 import ManageCourses from './views/admin/ManageCourses'
 import Analytics from './views/admin/Analytics'
 import Layout from './pages/Layout'
+import UserOverview from './views/user/UserOverview'
+import UserMyCourses from './views/user/UserMyCourses'
+import OverviewSuperUser from './views/superuser/OverviewSuperUser'
+import ManageCoursesSuperUser from './views/superuser/ManageCoursesSuperUser'
+import ManageUsersSuperUser from './views/superuser/ManageUsersSuperUser'
 
 export default function App() {
 
@@ -61,13 +66,22 @@ export default function App() {
             <ProtectedRoute allowedRoles={[4987]}>
               <DashboardSuperUser />  
             </ProtectedRoute>
-          } />
+          }>
+            <Route path='/superUser/dashboard/overview' element={<OverviewSuperUser />} />
+            <Route path='/superUser/dashboard/my-courses' element={<ManageCoursesSuperUser />} />
+            <Route path='/superUser/dashboard/students' element={<ManageUsersSuperUser />} />
+            <Route path='/superUser/dashboard/profile' element={<Profile />} />
+          </Route>
 
           <Route path='/user/dashboard' element={
             <ProtectedRoute allowedRoles={[4181]}>
               <DashboardUser />  
             </ProtectedRoute>
-          } />
+          }>
+            <Route path='/user/dashboard/overview' element={<UserOverview />} />
+            <Route path='/user/dashboard/courses-taken' element={<UserMyCourses />} />
+            <Route path='/user/dashboard/profile' element={<Profile />} />
+          </Route>
 
           <Route element={<AuthorizedPrivateRoute />}>
             <Route path='/create-course' element={<CreateCourse />} />
